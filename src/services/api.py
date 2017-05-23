@@ -41,11 +41,11 @@ class Api(object):
         lambda_client = boto3.client('lambda', self.config.region)
         apigateway_client = boto3.client('apigateway', self.config.region)
 
-        rest_api = RestApi.find_by_name(apigateway_client, self.config.name)
+        rest_api = RestApi.find_by_name(apigateway_client, self.name)
 
         if rest_api is None:
-            print 'TODO: Create API'
-            sys.exit(1)
+            print 'Creating APIGateway API: {}'.format(self.name)
+            rest_api = RestApi.create(apigateway_client, self.name)
 
         lambdas = Lambda.list(lambda_client)
         resources = Resource.list(apigateway_client, rest_api.api_id)
@@ -60,10 +60,10 @@ class Api(object):
             # Ensure that all the relevant lambdas exist and are up to date.
             if aws_lambda is None:
                 print 'Creating lambda {}'.format(endpoint.route)
-                aws_lambda = Lambda.create(self.config, lambda_client, endpoint.route)
+                aws_lambda = Lambda.create(self.config, lambda_client, endpoint.route, endpoint.code)
             else:
                 print 'Updating lambda {}'.format(endpoint.route)
-                aws_lambda.update(lambda_client)
+                aws_lambda.update(lambda_client, endpoint.code)
 
             # Ensure that all the API Gateway resources exist.
             if resource is None:
@@ -77,10 +77,11 @@ class Api(object):
 
             print 'Configuring resource {}'.format(endpoint.route)
             resource.configure_integration(
-                self.config,
                 apigateway_client,
                 lambda_client,
+                self.config,
                 aws_lambda,
+                rest_api,
                 endpoint.methods
             )
 

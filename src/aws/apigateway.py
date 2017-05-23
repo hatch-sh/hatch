@@ -25,6 +25,11 @@ class RestApi(object):
         self.version = version
 
     @staticmethod
+    def create(client, name):
+        response = client.create_rest_api(name=name)
+        return RestApi.from_aws_json(response)
+
+    @staticmethod
     def find_by_name(client, name):
         apis = RestApi.list(client)
         return next((api for api in apis if api.name == name), None)
@@ -34,7 +39,7 @@ class RestApi(object):
         return RestApi(
             api_id=response['id'],
             name=response['name'],
-            description=response['description'],
+            description=response.get('description', None),
             version=response.get('version', None)
         )
 
@@ -68,7 +73,7 @@ class Resource(object):
     def __repr__(self):
         return str(self)
 
-    def configure_integration(self, config, client, lambda_client, lambda_function, methods):
+    def configure_integration(self, client, lambda_client, config, lambda_function, rest_api, methods):
         '''
         Configures the integration between the API Gateway resource and the
         Lambda function for each HTTP verb that the resource supports.
@@ -77,7 +82,7 @@ class Resource(object):
         to allow the Resource to invoke the Lambda.
         '''
 
-        lambda_function.allow_invocation(config, lambda_client, methods)
+        lambda_function.allow_invocation(lambda_client, config.account_id, rest_api, methods)
 
         for method in methods:
 
@@ -86,7 +91,7 @@ class Resource(object):
 
             # Register the HTTP method for the resource.
             client.put_method(
-                restApiId=config.rest_api_id,
+                restApiId=rest_api.api_id,
                 resourceId=self.resource_id,
                 httpMethod=method,
                 authorizationType='NONE'
@@ -95,7 +100,7 @@ class Resource(object):
             # Define the integration for the method on the resource.
             # We're going with an AWS_PROXY integration.
             client.put_integration(
-                restApiId=config.rest_api_id,
+                restApiId=rest_api.api_id,
                 resourceId=self.resource_id,
                 httpMethod=method,
                 # We're using AWS_PROXY integration as it defines a clear interface
@@ -117,7 +122,7 @@ class Resource(object):
 
             # Define how to transform the response from the lambda into HTTP.
             client.put_integration_response(
-                restApiId=config.rest_api_id,
+                restApiId=rest_api.api_id,
                 resourceId=self.resource_id,
                 httpMethod=method,
                 statusCode='200',
@@ -130,7 +135,7 @@ class Resource(object):
             # Define how to result from the lambda is mapped into the response that
             # the client receives.
             client.put_method_response(
-                restApiId=config.rest_api_id,
+                restApiId=rest_api.api_id,
                 resourceId=self.resource_id,
                 httpMethod=method,
                 statusCode='200',

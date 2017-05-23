@@ -3,6 +3,7 @@ import glob
 import zipfile
 import os
 import json
+import uuid
 
 from botocore.exceptions import ClientError
 
@@ -18,8 +19,8 @@ class Lambda(object):
         return str(self)
 
     @staticmethod
-    def create(config, client, name):
-        code = package('api/{}'.format(name))
+    def create(config, client, name, code):
+        deployment_package = package(code)
         response = client.create_function(
             FunctionName=name,
             Runtime='python2.7',
@@ -27,7 +28,7 @@ class Lambda(object):
             Handler='handler.handle',
             Description='Description of {}'.format(name),
             Publish=True,
-            Code={'ZipFile': code}
+            Code={'ZipFile': deployment_package}
         )
         return Lambda.from_aws_json(response)
 
@@ -44,12 +45,12 @@ class Lambda(object):
             in payload['Functions']
         ]
 
-    def update(self, client):
-        code = package('api/{}'.format(self.name))
+    def update(self, client, code):
+        deployment_package = package(code)
         client.update_function_code(
             FunctionName=self.name,
             Publish=True,
-            ZipFile=code
+            ZipFile=deployment_package
         )
 
     def uri(self, region, account_id):
@@ -73,7 +74,7 @@ class Lambda(object):
             print 'No permissions for {}'.format(function_name)
             return []
 
-    def allow_invocation(self, config, client, methods):
+    def allow_invocation(self, client, account_id, rest_api, methods):
         '''
         Ensure that the API Gateway stage is allowed to invoke the lambda
         function.
@@ -91,10 +92,10 @@ class Lambda(object):
 
         for stage in stages:
             for method in methods:
-                statement_id = '{}-apigateway-{}-{}'.format(config.name, self.name, method)
+                statement_id = '{}-apigateway-{}-{}-{}'.format(rest_api.name, self.name, method, uuid.uuid4())
                 source_arn = 'arn:aws:execute-api:eu-central-1:{}:{}/{}/{}/{}'.format(
-                    config.account_id,
-                    config.rest_api_id,
+                    account_id,
+                    rest_api.api_id,
                     stage,
                     method,
                     self.name
