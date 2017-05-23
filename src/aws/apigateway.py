@@ -18,8 +18,34 @@ class Deployment(object):
 
 
 class RestApi(object):
-    def __init__(self, api_id):
+    def __init__(self, api_id, name, description, version):
         self.api_id = api_id
+        self.name = name
+        self.description = description
+        self.version = version
+
+    @staticmethod
+    def find_by_name(client, name):
+        apis = RestApi.list(client)
+        return next((api for api in apis if api.name == name), None)
+
+    @staticmethod
+    def from_aws_json(response):
+        return RestApi(
+            api_id=response['id'],
+            name=response['name'],
+            description=response['description'],
+            version=response.get('version', None)
+        )
+
+    @staticmethod
+    def list(client):
+        response = client.get_rest_apis(limit=500)
+        return [
+            RestApi.from_aws_json(item)
+            for item
+            in response['items']
+        ]
 
 
 class Resource(object):

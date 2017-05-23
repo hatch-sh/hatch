@@ -2,11 +2,10 @@ import yaml
 
 class Config(object):
 
-    def __init__(self, name, region, account_id, role_id, rest_api_id):
+    def __init__(self, name, region, account_id, role_id):
         self.region = region
         self.account_id = account_id
         self.role_id = role_id
-        self.rest_api_id = rest_api_id
         self.name = name
 
 
@@ -29,8 +28,7 @@ class Config(object):
                     cfg['name'],
                     cfg['region'],
                     cfg['account_id'],
-                    cfg['role_id'],
-                    cfg['rest_api_id']
+                    cfg['role_id']
                 )
             except yaml.YAMLError as exc:
                 print exc

@@ -1,0 +1,4 @@
+name: "easyaws-example"
+region: "eu-central-1"
+account_id: "790804032123"
+role_id: "arn:aws:iam::790804032123:role/snackablemachinelearning"

@@ -8,11 +8,11 @@ conventions to automate the creation of things like static website,
 HTTP API's etc. quick and easy.
 
 Usage:
-  awseasy api start [--config-file] [path]
-  awseasy api deploy [--config-file] [path]
-  awseasy website deploy <path>
-  awseasy -h | --help
-  awseasy --version
+  easyaws api start [--config-file] <path>
+  easyaws api deploy [--config-file] <path>
+  easyaws website deploy <path>
+  easyaws -h | --help
+  easyaws --version
 
 Options:
   -h --help    Show this help.
@@ -32,7 +32,12 @@ if __name__ == '__main__':
     arguments = docopt(__doc__, version='awseasy 0.1')
 
     if arguments.get('api'):
-        api_path = arguments.get('[path]', './api')
+        api_path = arguments.get('<path>', './api')
+
+        if not os.path.isdir(api_path):
+            print '{} doesn\'t exist'.format(api_path)
+            sys.exit(1)
+
         config_path = arguments.get('[--config-file]', '{}/api.yml'.format(api_path))
         api = Api.create(api_path, config_path)
 

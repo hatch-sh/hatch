@@ -1,5 +1,6 @@
 import glob
 import os
+import sys
 
 import boto3
 
@@ -40,7 +41,12 @@ class Api(object):
         lambda_client = boto3.client('lambda', self.config.region)
         apigateway_client = boto3.client('apigateway', self.config.region)
 
-        rest_api = RestApi(self.config.rest_api_id)
+        rest_api = RestApi.find_by_name(apigateway_client, self.config.name)
+
+        if rest_api is None:
+            print 'TODO: Create API'
+            sys.exit(1)
+
         lambdas = Lambda.list(lambda_client)
         resources = Resource.list(apigateway_client, rest_api.api_id)
 

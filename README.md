@@ -30,9 +30,16 @@ TODO
 
 TODO
 
+## Develop on easyaws
+
+    git clone git@github.com/mads-hartmann/easyaws
+    cd easyaws
+    make setup
+    ./.venv/bin/python src/cli.py api deploy ./examples/api
+
 ## Project Overview
 
-The general approach is that each kind of service has it's own file in `./src/services` 
+The general approach is that each kind of service has it's own file in `./src/services`
 where we have a model of the serivce. E.g. for the HTTP API we have `./src/api.py` which
 contains an `Api` class that represents our model of a HTTP API.
 
