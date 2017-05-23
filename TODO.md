@@ -2,6 +2,7 @@
 # General
 
 - [ ] Create proper example api / website
+- [ ] Figure out how to make this installable via `brew`
 
 # API
 
@@ -10,8 +11,8 @@
   - [ ] Create propper mapping between HTTP => AWS Lambda event + context dicts
 
 - [ ] Enable sharing of code between lambdas  
-Currently every lambda is deployed independently which means code can't be shared
-Upload to S3 bucket and configure Lambda's accordingly?
+Currently every lambda is deployed independently which means code can't be shared.
+Upload to S3 bucket and configure Lambdas accordingly?
 
 - [ ] Supported nested/advanced routes.  
 Currently only flat URL are supported. It would be nice to supported nested URL and variables
