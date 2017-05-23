@@ -1,8 +1,32 @@
 
-- Finish development server
-    - Ensure it can reload modules
-    - Finish mapping between HTTP to AWS context/event
-- Figure out how to share code between handlers
-- Define routes through annotations or a config or filesystem structure?
+# General
 
-- Create Api Gateway API if it doesn't exist?
+- [ ] Create proper example api / website
+
+# API
+
+- [ ] Finish development server
+  - [ ] Ensure that it reloads the modules on every request
+  - [ ] Create propper mapping between HTTP => AWS Lambda event + context dicts
+
+- [ ] Enable sharing of code between lambdas  
+Currently every lambda is deployed independently which means code can't be shared
+Upload to S3 bucket and configure Lambda's accordingly?
+
+- [ ] Supported nested/advanced routes.  
+Currently only flat URL are supported. It would be nice to supported nested URL and variables
+in the routes. My current thinking is that it's probably easiest with a little library for
+adding `@annotations` in the code that we can then extract
+
+- [ ] Automate creation of APIGateway API  
+currently rest api is set in the .yaml file
+
+- [ ] Add support for APIGateway model checking  
+APIGateway can perform simple JSON schema checks on the request before passing it to the lambda.
+It would be cool to add these to the endpoints somehow (maybe through `@annotations`)
+  
+# Website
+
+- [ ] Create development static server  
+Not super imporant as most static site will have something like webpack-dev-server etc. but
+I think it's important anyhow.
