@@ -1,0 +1,8 @@
+.build
+.vscode
+.venv
+.DS_Store
+*.pyc
+web/dist
+web/node_modules
+web/npm-debug.log
