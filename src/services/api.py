@@ -6,7 +6,7 @@ import boto3
 
 from aws.awslambda import Lambda
 from aws.apigateway import Resource, RestApi, Deployment, root_resource_id
-from config import Config
+from config import APIConfig as Config
 
 
 class Api(object):
