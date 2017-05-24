@@ -32,14 +32,11 @@ class LambdaHandler(tornado.web.RequestHandler):
         for key, value in response['headers'].iteritems():
             self.add_header(key, value)
 
-        self.set_status = response['statusCode']
+        self.set_status(response['statusCode'])
         self.write(response['body'])
 
 
 def run(api, port):
-
-    print [endpoint.route for endpoint in api.endpoints]
-
     app = tornado.web.Application([
         (r"/{}".format(endpoint.route), LambdaHandler, dict(code=endpoint.code))
         for endpoint
