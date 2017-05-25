@@ -25,9 +25,9 @@ import sys
 
 from docopt import docopt
 
-from services.api import Api
-from services.website import Website
-from ux import server
+from easyaws.services.api import Api
+from easyaws.services.website import Website
+from easyaws.ux import server
 
 
 def website_command(arguments):
@@ -63,7 +63,7 @@ def api_command(arguments):
         server.run(api, 8888)
 
 
-if __name__ == '__main__':
+def run():
     arguments = docopt(__doc__, version='awseasy 0.1')
 
     if arguments.get('api'):
@@ -72,3 +72,7 @@ if __name__ == '__main__':
         website_command(arguments)
     else:
         print 'Unknown command'
+
+
+if __name__ == '__main__':
+    run()

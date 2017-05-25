@@ -4,9 +4,9 @@ import sys
 
 import boto3
 
-from aws.awslambda import Lambda
-from aws.apigateway import Resource, RestApi, Deployment, root_resource_id
-from config import APIConfig as Config
+from easyaws.aws.awslambda import Lambda
+from easyaws.aws.apigateway import Resource, RestApi, Deployment, root_resource_id
+from easyaws.config import APIConfig as Config
 
 
 class Api(object):

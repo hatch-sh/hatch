@@ -16,8 +16,17 @@ setup_targets := \
 	.venv/.installed
 
 setup: $(setup_targets)
-clean:; rm -rf .build
-distclen:; rm -rf .venv
+
+install: ; python setup.py install
+
+clean:
+	rm -rf .build build dist
+	python setup.py clean
+
+distclen: clean;
+	rm -rf .venv
+	rm /usr/local/bin/easyaws
+
 lint: $(lint_targets)
 format: .build/autopep8.made
 
@@ -50,7 +59,7 @@ format: .build/autopep8.made
 
 # Install the dependencies
 .venv/.installed: .venv/.made requirements.txt
-	$(PIP) install -r requirements.txt
+	$(PIP) install --editable .
 	$(call touch, $@)
 
 # This is a target to help you debug the Makefile whenever things

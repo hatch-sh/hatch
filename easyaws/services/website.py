@@ -6,8 +6,8 @@ import os
 import boto3
 from botocore.client import ClientError
 
-from aws.s3 import bucket_exists
-from config import WebsiteConfig
+from easyaws.aws.s3 import bucket_exists
+from easyaws.config import WebsiteConfig
 
 
 ignores = ['.DS_Store', 'website.yml']
