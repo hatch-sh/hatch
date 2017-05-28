@@ -16,7 +16,7 @@ setup(
     url='https://github.com/mads-hartmann/easyaws',
     author='Mads Hartmann Jensen',
     author_email='mads379@gmail.com',
-    license='MIT',  # TODO: What license makes sense?
+    license='MIT',
     classifiers=[],
     keywords='',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
