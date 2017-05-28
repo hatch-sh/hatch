@@ -5,6 +5,7 @@ dist
 .venv
 .DS_Store
 *.pyc
+*.egg-info
 web/dist
 web/node_modules
 web/npm-debug.log
