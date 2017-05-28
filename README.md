@@ -32,7 +32,7 @@ TODO
 
 ## Develop on easyaws
 
-    git clone git@github.com/mads-hartmann/easyaws && cd easyaws
+    git clone git@github.com:mads-hartmann/easyaws.git && cd easyaws
     make setup
     .venv/bin/easyaws api deploy examples/api
     .venv/bin/easyaws website deploy examples/website
