@@ -23,9 +23,9 @@ clean:
 	rm -rf .build build dist
 	python setup.py clean
 
-distclen: clean;
+distclean: clean;
 	rm -rf .venv
-	rm /usr/local/bin/easyaws
+	rm -rf /usr/local/bin/easyaws
 
 lint: $(lint_targets)
 format: .build/autopep8.made
@@ -58,8 +58,9 @@ format: .build/autopep8.made
 	$(call touch, $@)
 
 # Install the dependencies
-.venv/.installed: .venv/.made requirements.txt
+.venv/.installed: .venv/.made requirements-dev.txt setup.py
 	$(PIP) install --editable .
+	$(PIP) install -r requirements-dev.txt
 	$(call touch, $@)
 
 # This is a target to help you debug the Makefile whenever things
