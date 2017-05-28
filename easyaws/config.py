@@ -1,5 +1,6 @@
 import yaml
 
+
 class APIConfig(object):
 
     def __init__(self, name, region, account_id, role_id):
@@ -21,6 +22,7 @@ class APIConfig(object):
                 )
             except yaml.YAMLError as exc:
                 print exc
+
 
 class WebsiteConfig(object):
 

@@ -53,7 +53,9 @@ def api_command(arguments):
         print '{} doesn\'t exist'.format(api_path)
         sys.exit(1)
 
-    config_path = arguments.get('[--config-file]', '{}/api.yml'.format(api_path))
+    config_path = arguments.get(
+        '[--config-file]',
+        '{}/api.yml'.format(api_path))
     api = Api.create(api_path, config_path)
 
     if arguments.get('deploy'):
