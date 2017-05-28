@@ -4,7 +4,6 @@ import fnmatch
 import os
 
 import boto3
-from botocore.client import ClientError
 
 from easyaws.aws.s3 import bucket_exists
 from easyaws.config import WebsiteConfig
