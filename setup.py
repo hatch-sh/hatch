@@ -9,11 +9,11 @@ with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='easyaws',
+    name='hatch',
     version='0.0.1',
     description='Tool to make AWS easy to use',
     long_description=long_description,
-    url='https://github.com/mads-hartmann/easyaws',
+    url='https://github.com/mads-hartmann/hatch',
     author='Mads Hartmann Jensen',
     author_email='mads379@gmail.com',
     license='MIT',
@@ -38,7 +38,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'easyaws=easyaws.cli:run',
+            'hatch=hatch.cli:run',
         ]
     }
 )

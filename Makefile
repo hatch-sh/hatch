@@ -4,8 +4,8 @@ PIP := .venv/bin/pip
 PYTHON := .venv/bin/python
 
 python_files := \
-	$(wildcard easyaws/**/*.py) \
-	$(wildcard easyaws/*.py)
+	$(wildcard hatch/**/*.py) \
+	$(wildcard hatch/*.py)
 
 lint_targets := \
 	.build/pylint.made \
@@ -24,7 +24,7 @@ clean:
 
 distclean: clean;
 	rm -rf .venv
-	rm -rf /usr/local/bin/easyaws
+	rm -rf /usr/local/bin/hatch
 
 lint: $(lint_targets)
 format: .build/autopep8.made

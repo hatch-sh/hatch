@@ -5,8 +5,8 @@ import os
 
 import boto3
 
-from easyaws.aws.s3 import bucket_exists
-from easyaws.config import WebsiteConfig
+from hatch.aws.s3 import bucket_exists
+from hatch.config import WebsiteConfig
 
 
 ignores = ['.DS_Store', 'website.yml']

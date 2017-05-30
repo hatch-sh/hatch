@@ -1,6 +1,6 @@
-# easyaws
+# hatch
 
-awseasy is a tool that makes it easy to build products using AWS. It uses
+hatch is a tool that makes it easy to build products using AWS. It uses
 conventions to automate the creation of things like static website, HTTP API's
 etc. quick and easy.
 
@@ -11,16 +11,16 @@ etc. quick and easy.
 This uses API Gateway, AWS Lambda, and Route53 to build HTTP APIs.
 
     easywas api create # scaffolding
-    easyaws api start # local development
-    easyaws api deploy # 0 config deployment to AWS
+    hatch api start # local development
+    hatch api deploy # 0 config deployment to AWS
 
 ### Static Websites
 
 This uses S3, CloudFront, and Route53.
 
-    easyaws website create # scaffolding
-    easyaws website deploy
-    easyaws website start
+    hatch website create # scaffolding
+    hatch website deploy
+    hatch website start
 
 ### Cron jobs
 
@@ -30,18 +30,18 @@ TODO
 
 TODO
 
-## Develop on easyaws
+## Develop on hatch
 
-    git clone git@github.com:mads-hartmann/easyaws.git && cd easyaws
+    git clone git@github.com:mads-hartmann/hatch.git && cd hatch
     make setup
-    .venv/bin/easyaws api deploy examples/api
-    .venv/bin/easyaws website deploy examples/website
+    .venv/bin/hatch api deploy examples/api
+    .venv/bin/hatch website deploy examples/website
 
 ## Project Overview
 
 The general approach is that each kind of service has it's own file in
-`./easyaws/services` where we have a model of the service. E.g. for the HTTP
-API we have `./easyaws/services/api.py` which contains an `Api` class that
+`./hatch/services` where we have a model of the service. E.g. for the HTTP
+API we have `./hatch/services/api.py` which contains an `Api` class that
 represents our model of a HTTP API.
 
 This modal can then be used for two things. Firstly it is used to figure out
@@ -50,6 +50,6 @@ development. Again, taking the HTTP API as an example, we use the `Api` class
 to create a Tornado server we can run locally that emulate the configuration of
 running your code on AWS Labmda/API Gateway.
 
-The services are in `./easyaws/services`. The mapping to AWS are in
-`./easyaws/aws` and the local development setup things can be found in
-`./easyaws/ux`.
+The services are in `./hatch/services`. The mapping to AWS are in
+`./hatch/aws` and the local development setup things can be found in
+`./hatch/ux`.

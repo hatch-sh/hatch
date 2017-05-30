@@ -1,18 +1,18 @@
 # pylint: disable=locally-disabled, C0103
 
 """
-Easy AWS
+Hatch
 
-awseasy is a tool that makes it easy to build products using AWS. It uses
+hatch is a tool that makes it easy to build products using AWS. It uses
 conventions to automate the creation of things like static website,
 HTTP API's etc. quick and easy.
 
 Usage:
-  easyaws api start [--config-file] <path>
-  easyaws api deploy [--config-file] <path>
-  easyaws website deploy [--config-file] <path>
-  easyaws -h | --help
-  easyaws --version
+  hatch api start [--config-file] <path>
+  hatch api deploy [--config-file] <path>
+  hatch website deploy [--config-file] <path>
+  hatch -h | --help
+  hatch --version
 
 Options:
   -h --help    Show this help.
@@ -25,9 +25,9 @@ import sys
 
 from docopt import docopt
 
-from easyaws.services.api import Api
-from easyaws.services.website import Website
-from easyaws.ux import server
+from hatch.services.api import Api
+from hatch.services.website import Website
+from hatch.ux import server
 
 
 def website_command(arguments):
@@ -66,7 +66,7 @@ def api_command(arguments):
 
 
 def run():
-    arguments = docopt(__doc__, version='awseasy 0.1')
+    arguments = docopt(__doc__, version='hatch 0.1')
 
     if arguments.get('api'):
         api_command(arguments)
