@@ -1,4 +1,5 @@
 import yaml
+import botocore.session
 
 
 class APIConfig(object):
@@ -32,12 +33,14 @@ class WebsiteConfig(object):
 
     @staticmethod
     def parse(path):
+        session = botocore.session.get_session()
         with open(path, 'r') as stream:
             try:
                 cfg = yaml.load(stream)
+                region = cfg['region'] if 'region' in cfg else session.get_config_variable('region')
                 return WebsiteConfig(
                     cfg['name'],
-                    cfg['region']
+                    region
                 )
             except yaml.YAMLError as exc:
                 print exc

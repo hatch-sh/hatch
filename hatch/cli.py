@@ -23,11 +23,20 @@ Options:
 import os
 import sys
 
+import botocore.session
 from docopt import docopt
 
 from hatch.services.api import Api
 from hatch.services.website import Website
 from hatch.ux import server
+
+
+def check_credentials():
+    session = botocore.session.get_session()
+    if session.get_credentials() is None:
+        print 'You need to configure an AWS profile.'
+        print 'See https://boto3.readthedocs.io/en/latest/guide/configuration.html'
+        sys.exit(1)
 
 
 def website_command(arguments):
@@ -67,6 +76,7 @@ def api_command(arguments):
 
 def run():
     arguments = docopt(__doc__, version='hatch 0.1')
+    check_credentials()
 
     if arguments.get('api'):
         api_command(arguments)
