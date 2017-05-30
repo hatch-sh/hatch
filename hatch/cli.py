@@ -31,12 +31,22 @@ from hatch.services.website import Website
 from hatch.ux import server
 
 
+def configuration_error(message):
+    print 'Error: {}'.format(message)
+    print 'Please ensure you\'ve configured AWS correctly'
+    print 'See https://boto3.readthedocs.io/en/latest/guide/configuration.html'
+    sys.exit(1)
+
+
 def check_credentials():
-    session = botocore.session.get_session()
-    if session.get_credentials() is None:
-        print 'You need to configure an AWS profile.'
-        print 'See https://boto3.readthedocs.io/en/latest/guide/configuration.html'
-        sys.exit(1)
+    try:
+        session = botocore.session.get_session()
+        credentials = session.get_credentials()
+    except botocore.exceptions.ProfileNotFound:
+        configuration_error('Unknown profile')
+
+    if credentials is None:
+        configuration_error('No AWS credentials')
 
 
 def website_command(arguments):
