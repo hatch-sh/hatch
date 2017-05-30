@@ -4,9 +4,8 @@ PIP := .venv/bin/pip
 PYTHON := .venv/bin/python
 
 python_files := \
-	$(wildcard api/**/*.py) \
-	$(wildcard *.py) \
-	$(wildcard **/*.py)
+	$(wildcard easyaws/**/*.py) \
+	$(wildcard easyaws/*.py)
 
 lint_targets := \
 	.build/pylint.made \
@@ -36,6 +35,7 @@ format: .build/autopep8.made
 
 # Lint python files using pylint
 .build/pylint.made: $(python_files)
+	$(call print, Linting with pylint, $(words $^))
 	$(QUIET).venv/bin/pylint \
 		--errors-only \
 		--msg-template="{path}({line}): [{msg_id}{obj}] {msg}" \
@@ -44,11 +44,13 @@ format: .build/autopep8.made
 
 # Lint python files using flake8
 .build/flake8.made: $(python_files)
+	$(call print, Linting with flake8, $(words $^))
 	$(QUIET).venv/bin/flake8 $^
 	$(call touch, $@)
 
 # Format python files using autopep8
 .build/autopep8.made: $(python_files)
+	$(call print, Formatting with autopep8, $(words $<))
 	$(QUIET).venv/bin/autopep8 --in-place --aggressive --aggressive $^
 
 # Creating the virtual environment
