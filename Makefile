@@ -58,9 +58,8 @@ format: .build/autopep8.made
 	$(call touch, $@)
 
 # Install the dependencies
-.venv/.installed: .venv/.made requirements-dev.txt setup.py
-	$(PIP) install --editable .
-	$(PIP) install -r requirements-dev.txt
+.venv/.installed: .venv/.made setup.py
+	$(PIP) install --editable .[dev]
 	$(call touch, $@)
 
 # This is a target to help you debug the Makefile whenever things

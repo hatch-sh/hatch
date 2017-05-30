@@ -22,10 +22,20 @@ setup(
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=[
         'boto3===1.4.4',
+        'botocore==1.5.55',
         'PyYAML===3.12',
         'docopt==0.6.2',
         'tornado==4.5.1'
     ],
+    extras_require={
+        'dev': [
+            'ptpython===0.39',
+            'autopep8===1.3.1',
+            'pylint===1.6.5',
+            'flake8===3.3.0',
+            'pydocstyle===1.1.1'
+        ]
+    },
     entry_points={
         'console_scripts': [
             'easyaws=easyaws.cli:run',
