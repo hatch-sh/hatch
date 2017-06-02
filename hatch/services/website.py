@@ -32,12 +32,13 @@ class Website(object):
         bucket_website = bucket.Website()
 
         if not bucket_exists(bucket):
-            bucket.create(
-                ACL='public-read',
-                CreateBucketConfiguration={
-                    'LocationConstraint': self.config.region
-                }
-            )
+            region = self.config.region
+            kwargs = {'ACL': 'public-read'}
+            if region != 'us-east-1':
+                # https://github.com/boto/boto3/issues/125
+                kwargs['CreateBucketConfiguration'] = {'LocationConstraint': region}
+
+            bucket.create(**kwargs)
             bucket_website.put(
                 WebsiteConfiguration={
                     'IndexDocument': {
