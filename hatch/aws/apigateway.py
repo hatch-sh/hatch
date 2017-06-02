@@ -73,7 +73,14 @@ class Resource(object):
     def __repr__(self):
         return str(self)
 
-    def configure_integration(self, client, lambda_client, config, lambda_function, rest_api, methods):
+    def configure_integration(
+            self,
+            client,
+            lambda_client,
+            config,
+            lambda_function,
+            rest_api,
+            methods):
         '''
         Configures the integration between the API Gateway resource and the
         Lambda function for each HTTP verb that the resource supports.

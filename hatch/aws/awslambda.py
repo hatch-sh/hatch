@@ -55,11 +55,7 @@ class Lambda(object):
 
     def uri(self, region, account_id):
         return 'arn:aws:apigateway:{}:lambda:path/2015-03-31/functions/arn:aws:lambda:{}:{}:function:{}/invocations'.format(
-            region,
-            region,
-            account_id,
-            self.name
-        )
+            region, region, account_id, self.name)
 
     def permissions(self, client, function_name):
         try:

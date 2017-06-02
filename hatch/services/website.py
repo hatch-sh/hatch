@@ -75,5 +75,3 @@ def recursive_glob(folder, pattern):
                 continue
             else:
                 yield os.path.join(root, filename)
-
-
