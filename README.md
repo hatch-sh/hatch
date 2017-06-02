@@ -10,7 +10,7 @@ etc. quick and easy.
 
 This uses API Gateway, AWS Lambda, and Route53 to build HTTP APIs.
 
-    easywas api create # scaffolding
+    hatch api create # scaffolding
     hatch api start # local development
     hatch api deploy # 0 config deployment to AWS
 
