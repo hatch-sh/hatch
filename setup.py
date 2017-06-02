@@ -21,6 +21,7 @@ setup(
     keywords='',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=[
+        'boto===2.47.0',
         'boto3===1.4.4',
         'botocore==1.5.55',
         'PyYAML===3.12',

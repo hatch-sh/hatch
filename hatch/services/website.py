@@ -3,6 +3,7 @@ import mimetypes
 import fnmatch
 import os
 
+import boto
 import boto3
 
 from hatch.aws.s3 import bucket_exists
@@ -65,7 +66,8 @@ class Website(object):
                 'ContentType': content_type
             })
 
-        url = 'http://{}.s3-website.{}.amazonaws.com'.format(self.name, self.config.region)
+        bucket = boto.connect_s3().get_bucket(self.name)
+        url = 'http://{}'.format(bucket.get_website_endpoint())
         print 'Website uploaded to {}'.format(url)
 
 
