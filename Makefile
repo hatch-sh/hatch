@@ -19,7 +19,7 @@ setup: $(setup_targets)
 install: ; python setup.py install
 
 clean:
-	rm -rf .build build dist
+	rm -rf .build build dist hatch.egg-info
 	python setup.py clean
 
 distclean: clean;
