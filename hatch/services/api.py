@@ -3,6 +3,7 @@ import os
 
 import boto3
 
+from hatch.aws.iam import Role, Policy
 from hatch.aws.awslambda import Lambda
 from hatch.aws.apigateway import Resource, RestApi, Deployment, root_resource_id
 from hatch.config import APIConfig as Config
@@ -39,9 +40,15 @@ class Api(object):
     def deploy(self):
         lambda_client = boto3.client('lambda', self.config.region)
         apigateway_client = boto3.client('apigateway', self.config.region)
+        iam_client = boto3.client('iam', self.config.region)
+
+        role_name = '{}-lambda'.format(self.name)
+        role = Role.get(iam_client, role_name)
+        if not role:
+            print 'Creating role {}'.format(role_name)
+            role = Role.create(iam_client, role_name, policies=[Policy.AWSLambdaFullAccess])
 
         rest_api = RestApi.find_by_name(apigateway_client, self.name)
-
         if rest_api is None:
             print 'Creating APIGateway API: {}'.format(self.name)
             rest_api = RestApi.create(apigateway_client, self.name)
@@ -59,7 +66,7 @@ class Api(object):
             # Ensure that all the relevant lambdas exist and are up to date.
             if aws_lambda is None:
                 print 'Creating lambda {}'.format(endpoint.route)
-                aws_lambda = Lambda.create(self.config, lambda_client, endpoint.route, endpoint.code)
+                aws_lambda = Lambda.create(lambda_client, role.role_id, endpoint.route, endpoint.code)
             else:
                 print 'Updating lambda {}'.format(endpoint.route)
                 aws_lambda.update(lambda_client, endpoint.code)

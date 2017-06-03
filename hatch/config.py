@@ -5,10 +5,9 @@ import boto3
 
 class APIConfig(object):
 
-    def __init__(self, name, region, account_id, role_id):
+    def __init__(self, name, region, account_id):
         self.region = region
         self.account_id = account_id
-        self.role_id = role_id
         self.name = name
 
     @staticmethod
@@ -19,8 +18,7 @@ class APIConfig(object):
                 return APIConfig(
                     cfg['name'],
                     get_region(cfg),
-                    get_account_id(),
-                    cfg['role_id']
+                    get_account_id()
                 )
             except yaml.YAMLError as exc:
                 print exc
