@@ -1,6 +1,5 @@
 import glob
 import os
-import sys
 
 import boto3
 
@@ -101,6 +100,7 @@ class Endpoint(object):
     An endpoint represents, as the name suggests, an endpoint that we'd
     like to expose in API Gateway
     '''
+
     def __init__(self, route, methods, code):
         self.route = route
         self.code = code

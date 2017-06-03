@@ -51,7 +51,7 @@ format: .build/autopep8.made
 # Format python files using autopep8
 .build/autopep8.made: $(python_files)
 	$(call print, Formatting with autopep8, $(words $<))
-	$(QUIET).venv/bin/autopep8 --in-place --aggressive --aggressive $^
+	$(QUIET).venv/bin/autopep8 --in-place --aggressive --aggressive --max-line-length 120 $^
 
 # Creating the virtual environment
 .venv/.made:

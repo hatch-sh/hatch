@@ -3,6 +3,7 @@ import mimetypes
 import fnmatch
 import os
 
+import boto
 import boto3
 
 from hatch.aws.s3 import bucket_exists
@@ -32,12 +33,13 @@ class Website(object):
         bucket_website = bucket.Website()
 
         if not bucket_exists(bucket):
-            bucket.create(
-                ACL='public-read',
-                CreateBucketConfiguration={
-                    'LocationConstraint': self.config.region
-                }
-            )
+            region = self.config.region
+            kwargs = {'ACL': 'public-read'}
+            if region != 'us-east-1':
+                # https://github.com/boto/boto3/issues/125
+                kwargs['CreateBucketConfiguration'] = {'LocationConstraint': region}
+
+            bucket.create(**kwargs)
             bucket_website.put(
                 WebsiteConfiguration={
                     'IndexDocument': {
@@ -64,7 +66,8 @@ class Website(object):
                 'ContentType': content_type
             })
 
-        url = 'http://{}.s3-website.{}.amazonaws.com'.format(self.name, self.config.region)
+        bucket = boto.connect_s3().get_bucket(self.name)
+        url = 'http://{}'.format(bucket.get_website_endpoint())
         print 'Website uploaded to {}'.format(url)
 
 
@@ -75,5 +78,3 @@ def recursive_glob(folder, pattern):
                 continue
             else:
                 yield os.path.join(root, filename)
-
-
