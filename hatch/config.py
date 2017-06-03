@@ -1,5 +1,6 @@
 import yaml
 import botocore.session
+import boto3
 
 
 class APIConfig(object):
@@ -17,8 +18,8 @@ class APIConfig(object):
                 cfg = yaml.load(stream)
                 return APIConfig(
                     cfg['name'],
-                    cfg['region'],
-                    cfg['account_id'],
+                    get_region(cfg),
+                    get_account_id(),
                     cfg['role_id']
                 )
             except yaml.YAMLError as exc:
@@ -33,14 +34,27 @@ class WebsiteConfig(object):
 
     @staticmethod
     def parse(path):
-        session = botocore.session.get_session()
         with open(path, 'r') as stream:
             try:
                 cfg = yaml.load(stream)
-                region = cfg['region'] if 'region' in cfg else session.get_config_variable('region')
+                region = get_region(cfg)
                 return WebsiteConfig(
                     cfg['name'],
                     region
                 )
             except yaml.YAMLError as exc:
                 print exc
+
+
+def get_region(cfg):
+    if 'region' in cfg:
+        return cfg['region']
+    else:
+        session = botocore.session.get_session()
+        return session.get_config_variable('region')
+
+
+def get_account_id():
+    sts = boto3.client('sts')
+    response = sts.get_caller_identity()
+    return response['Account']
