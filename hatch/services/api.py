@@ -66,7 +66,12 @@ class Api(object):
             # Ensure that all the relevant lambdas exist and are up to date.
             if aws_lambda is None:
                 print 'Creating lambda {}'.format(endpoint.route)
-                aws_lambda = Lambda.create(lambda_client, role.role_id, endpoint.route, endpoint.code)
+                aws_lambda = Lambda.create(
+                    client=lambda_client,
+                    role_arn=role.arn,
+                    name=endpoint.route,
+                    code=endpoint.code
+                )
             else:
                 print 'Updating lambda {}'.format(endpoint.route)
                 aws_lambda.update(lambda_client, endpoint.code)

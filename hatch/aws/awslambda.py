@@ -19,12 +19,12 @@ class Lambda(object):
         return str(self)
 
     @staticmethod
-    def create(client, role_id, name, code):
+    def create(client, role_arn, name, code):
         deployment_package = package(code)
         response = client.create_function(
             FunctionName=name,
             Runtime='python2.7',
-            Role=role_id,
+            Role=role_arn,
             Handler='handler.handle',
             Description='Description of {}'.format(name),
             Publish=True,
