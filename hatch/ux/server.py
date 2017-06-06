@@ -1,8 +1,11 @@
-import sys
 import imp
+import logging
+import sys
 
 import tornado.ioloop
 import tornado.web
+
+logger = logging.getLogger(__name__)
 
 
 class LambdaHandler(tornado.web.RequestHandler):
@@ -43,5 +46,5 @@ def run(api, port):
         in api.endpoints
     ])
     app.listen(port)
-    print 'Listening to http://localhost:{}'.format(port)
+    logger.info('Listening to http://localhost:{}'.format(port))
     tornado.ioloop.IOLoop.current().start()

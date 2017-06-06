@@ -1,4 +1,5 @@
 import glob
+import logging
 import os
 
 import boto3
@@ -7,6 +8,8 @@ from hatch.aws.iam import Role, Policy
 from hatch.aws.awslambda import Lambda
 from hatch.aws.apigateway import Resource, RestApi, Deployment, root_resource_id
 from hatch.config import APIConfig as Config
+
+logger = logging.getLogger(__name__)
 
 
 class Api(object):
@@ -45,12 +48,12 @@ class Api(object):
         role_name = '{}-lambda'.format(self.name)
         role = Role.get(iam_client, role_name)
         if not role:
-            print 'Creating role {}'.format(role_name)
+            logger.debug('Creating role %s', role_name)
             role = Role.create(iam_client, role_name, policies=[Policy.AWSLambdaFullAccess])
 
         rest_api = RestApi.find_by_name(apigateway_client, self.name)
         if rest_api is None:
-            print 'Creating APIGateway API: {}'.format(self.name)
+            logger.debug('Creating APIGateway API %s', self.name)
             rest_api = RestApi.create(apigateway_client, self.name)
 
         lambdas = Lambda.list(lambda_client)
@@ -60,33 +63,34 @@ class Api(object):
 
         for endpoint in self.endpoints:
 
-            aws_lambda = next((l for l in lambdas if l.name == endpoint.route), None)
+            route_name = endpoint.route
+            aws_lambda = next((l for l in lambdas if l.name == route_name), None)
             resource = next((r for r in resources if endpoint.route == r.path_part), None)
 
             # Ensure that all the relevant lambdas exist and are up to date.
             if aws_lambda is None:
-                print 'Creating lambda {}'.format(endpoint.route)
+                logger.debug('Creating lambda %s', route_name)
                 aws_lambda = Lambda.create(
                     client=lambda_client,
                     role_arn=role.arn,
-                    name=endpoint.route,
+                    name=route_name,
                     code=endpoint.code
                 )
             else:
-                print 'Updating lambda {}'.format(endpoint.route)
+                logger.debug('Updating lambda %s', route_name)
                 aws_lambda.update(lambda_client, endpoint.code)
 
             # Ensure that all the API Gateway resources exist.
             if resource is None:
-                print 'Creating resource {}'.format(endpoint.route)
+                logger.debug('Creating resource %s', route_name)
                 resource = Resource.create(
                     root_id,
-                    endpoint.route,
+                    route_name,
                     apigateway_client,
                     rest_api.api_id
                 )
 
-            print 'Configuring resource {}'.format(endpoint.route)
+            logger.debug('Configuring resource %s', route_name)
             resource.configure_integration(
                 apigateway_client,
                 lambda_client,
@@ -100,11 +104,11 @@ class Api(object):
 
         Deployment.deploy(apigateway_client, rest_api, stage)
 
-        print 'Deployed to https://{}.execute-api.{}.amazonaws.com/{}'.format(
+        logger.info('Deployed to https://{}.execute-api.{}.amazonaws.com/{}'.format(
             rest_api.api_id,
             self.config.region,
             stage
-        )
+        ))
 
 
 class Endpoint(object):

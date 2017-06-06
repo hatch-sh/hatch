@@ -1,6 +1,10 @@
+import logging
+
 import yaml
 import botocore.session
 import boto3
+
+logger = logging.getLogger(__name__)
 
 
 class APIConfig(object):
@@ -21,7 +25,7 @@ class APIConfig(object):
                     get_account_id()
                 )
             except yaml.YAMLError as exc:
-                print exc
+                logger.exception(exc)
 
 
 class WebsiteConfig(object):
@@ -41,7 +45,7 @@ class WebsiteConfig(object):
                     region
                 )
             except yaml.YAMLError as exc:
-                print exc
+                logger.exception(exc)
 
 
 def get_region(cfg):
