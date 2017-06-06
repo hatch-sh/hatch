@@ -6,12 +6,13 @@ class Policy(object):
 
 
 class Role(object):
-    def __init__(self, role_id):
+    def __init__(self, arn, role_id):
+        self.arn = arn
         self.role_id = role_id
 
     @staticmethod
     def from_aws_json(response):
-        return Role(role_id=response['RoleId'])
+        return Role(arn=response['Arn'], role_id=response['RoleId'])
 
     @staticmethod
     def create(client, role_name, policies):
