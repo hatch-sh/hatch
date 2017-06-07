@@ -37,7 +37,9 @@ TODO
     git clone git@github.com:mads-hartmann/hatch.git && cd hatch
     make setup
     .venv/bin/hatch api deploy examples/api
+    .venv/bin/hatch api start examples/api
     .venv/bin/hatch website deploy examples/website
+    .venv/bin/hatch website start examples/website
 
 ## Project Overview
 

@@ -10,6 +10,7 @@ HTTP API's etc. quick and easy.
 Usage:
   hatch api start [options] <path>
   hatch api deploy [options] <path>
+  hatch website start [options] <path>
   hatch website deploy [options] <path>
   hatch -h | --help
   hatch --version
@@ -31,7 +32,8 @@ from docopt import docopt
 
 from hatch.services.api import Api
 from hatch.services.website import Website
-from hatch.ux import server
+from hatch.ux.server import run_lambda
+from hatch.ux.website import serve_path
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +68,8 @@ def website_command(arguments):
 
     if arguments.get('deploy'):
         website.deploy()
+    elif arguments.get('start'):
+        serve_path(path, 8000)
 
 
 def api_command(arguments):
@@ -82,9 +86,8 @@ def api_command(arguments):
 
     if arguments.get('deploy'):
         api.deploy()
-
     elif arguments.get('start'):
-        server.run(api, 8888)
+        run_lambda(api, 8888)
 
 
 def configure_logging(verbose=False):
