@@ -4,6 +4,8 @@ hatch is a tool that makes it easy to build products using AWS. It uses
 conventions to automate the creation of things like static website, HTTP API's
 etc. quick and easy.
 
+[![Build Status](https://travis-ci.org/mads-hartmann/hatch.svg?branch=master)](https://travis-ci.org/mads-hartmann/hatch)
+
 ## Services
 
 ### HTTP(S) APIs

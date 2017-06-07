@@ -64,6 +64,9 @@ format: .build/autopep8.made
 	$(PIP) install --editable .[dev]
 	$(call touch, $@)
 
+ci: lint
+
+
 # This is a target to help you debug the Makefile whenever things
 # don't work as you expect. You use it to print the value of a
 # variable like so `make print-VARIABLENAME`, e.g.
