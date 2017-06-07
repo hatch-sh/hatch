@@ -1,11 +1,14 @@
-import StringIO
 import glob
-import zipfile
-import os
 import json
+import logging
+import os
+import StringIO
 import uuid
+import zipfile
 
 from botocore.exceptions import ClientError
+
+logger = logging.getLogger(__name__)
 
 
 class Lambda(object):
@@ -67,7 +70,7 @@ class Lambda(object):
                 in policy['Statement']
             ]
         except ClientError:
-            print 'No permissions for {}'.format(function_name)
+            logger.debug('No permissions for %s', function_name)
             return []
 
     def allow_invocation(self, client, account_id, rest_api, methods):

@@ -1,7 +1,8 @@
-import sys
-import mimetypes
 import fnmatch
+import logging
+import mimetypes
 import os
+import sys
 
 import boto
 import boto3
@@ -9,6 +10,7 @@ import boto3
 from hatch.aws.s3 import bucket_exists
 from hatch.config import WebsiteConfig
 
+logger = logging.getLogger(__name__)
 
 ignores = ['.DS_Store', 'website.yml']
 
@@ -55,12 +57,12 @@ class Website(object):
             mime_type = mimetypes.guess_type(artifact)
 
             if mime_type is None:
-                print 'Unknown mime type for {}'.format(artifact)
+                logger.error('Unknown mime type for %s', artifact)
                 sys.exit(1)
 
             [content_type, _] = mime_type
 
-            print 'Uploading {} [{}]'.format(artifact, content_type)
+            logger.debug('Uploading %s [%s]', artifact, content_type)
             bucket.upload_file(artifact, artifact.replace('{}/'.format(self.path), ''), ExtraArgs={
                 'ACL': 'public-read',
                 'ContentType': content_type
@@ -68,7 +70,7 @@ class Website(object):
 
         bucket = boto.connect_s3().get_bucket(self.name)
         url = 'http://{}'.format(bucket.get_website_endpoint())
-        print 'Website uploaded to {}'.format(url)
+        logger.info('Website uploaded to %s', url)
 
 
 def recursive_glob(folder, pattern):

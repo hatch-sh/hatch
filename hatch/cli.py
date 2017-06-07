@@ -8,18 +8,21 @@ conventions to automate the creation of things like static website,
 HTTP API's etc. quick and easy.
 
 Usage:
-  hatch api start [--config-file] <path>
-  hatch api deploy [--config-file] <path>
-  hatch website deploy [--config-file] <path>
+  hatch api start [options] <path>
+  hatch api deploy [options] <path>
+  hatch website deploy [options] <path>
   hatch -h | --help
   hatch --version
 
 Options:
-  -h --help    Show this help.
-  --version    Show version.
-  --silent     Don't output to stdout.
+  -h --help      Show this help.
+  --version      Show version.
+  --config-file  Path to config file.
+  --silent       Don't output to stdout.
+  --verbose      Output a lot to stdout.
 """
 
+import logging
 import os
 import sys
 
@@ -30,11 +33,13 @@ from hatch.services.api import Api
 from hatch.services.website import Website
 from hatch.ux import server
 
+logger = logging.getLogger(__name__)
+
 
 def configuration_error(message):
-    print 'Error: {}'.format(message)
-    print 'Please ensure you\'ve configured AWS correctly'
-    print 'See https://boto3.readthedocs.io/en/latest/guide/configuration.html'
+    logger.error('Error %s', message)
+    logger.error('Please ensure you\'ve configured AWS correctly')
+    logger.error('See https://boto3.readthedocs.io/en/latest/guide/configuration.html')
     sys.exit(1)
 
 
@@ -54,22 +59,20 @@ def website_command(arguments):
     config = arguments.get('[--config-file]', '{}/website.yml'.format(path))
 
     if not os.path.isdir(path):
-        print 'No such directory: {}'.format(path)
+        logger.error('No such directory: %s', path)
         sys.exit(1)
 
     website = Website.create(path, config)
 
     if arguments.get('deploy'):
         website.deploy()
-    else:
-        print 'Meh.'
 
 
 def api_command(arguments):
     api_path = arguments.get('<path>', './api')
 
     if not os.path.isdir(api_path):
-        print '{} doesn\'t exist'.format(api_path)
+        logger.error('No such directory: %s', api_path)
         sys.exit(1)
 
     config_path = arguments.get(
@@ -84,16 +87,25 @@ def api_command(arguments):
         server.run(api, 8888)
 
 
+def configure_logging(verbose=False):
+    logging.basicConfig(
+        level=logging.DEBUG if verbose else logging.CRITICAL,
+        format=logging.BASIC_FORMAT if verbose else '%(message)s'
+    )
+    logging.getLogger('hatch').setLevel(logging.DEBUG)
+
+
 def run():
     arguments = docopt(__doc__, version='hatch 0.1')
+    if not arguments.get('--silent'):
+        configure_logging(verbose=arguments.get('--verbose'))
+
     check_credentials()
 
     if arguments.get('api'):
         api_command(arguments)
     elif arguments.get('website'):
         website_command(arguments)
-    else:
-        print 'Unknown command'
 
 
 if __name__ == '__main__':
