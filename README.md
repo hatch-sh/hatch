@@ -6,6 +6,11 @@ etc. quick and easy.
 
 [![Build Status](https://travis-ci.org/mads-hartmann/hatch.svg?branch=master)](https://travis-ci.org/mads-hartmann/hatch)
 
+## Installation
+
+    brew tap mads-hartmann/hatch git@github.com:mads-hartmann/hatch.git
+    brew install hatch
+
 ## Services
 
 ### HTTP(S) APIs
