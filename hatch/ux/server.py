@@ -39,12 +39,15 @@ class LambdaHandler(tornado.web.RequestHandler):
         self.write(response['body'])
 
 
-def run(api, port):
+def run_lambda(api, port):
     app = tornado.web.Application([
         (r"/{}".format(endpoint.route), LambdaHandler, dict(code=endpoint.code))
         for endpoint
         in api.endpoints
     ])
     app.listen(port)
-    logger.info('Listening to http://localhost:{}'.format(port))
-    tornado.ioloop.IOLoop.current().start()
+    logger.info('Hatch api is listening to http://localhost:{}'.format(port))
+    try:
+        tornado.ioloop.IOLoop.current().start()
+    except KeyboardInterrupt:
+        pass
