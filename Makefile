@@ -26,6 +26,10 @@ distclean: clean;
 	rm -rf .venv
 	rm -rf /usr/local/bin/hatch
 
+publish: lint
+	python setup.py sdist upload -r pypitest
+	python setup.py sdist upload -r pypi
+
 lint: $(lint_targets)
 format: .build/autopep8.made
 

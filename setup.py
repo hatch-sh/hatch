@@ -9,17 +9,19 @@ with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='hatch',
+    name='hatch-cli',
     version='0.0.1',
-    description='Tool to make AWS easy to use',
+    description='Command line interface for Hatch',
     long_description=long_description,
     url='https://github.com/mads-hartmann/hatch',
+    download_url='https://github.com/mads-hartmann/hatch/archive/v0.0.1-beta.tar.gz',
     author='Mads Hartmann Jensen',
     author_email='mads379@gmail.com',
     license='MIT',
     classifiers=[],
-    keywords='',
+    keywords=[],
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    package_data={'': ['README.md']},
     install_requires=[
         'boto===2.47.0',
         'boto3===1.4.4',
