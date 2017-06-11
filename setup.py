@@ -1,25 +1,25 @@
+"""
+Hatch.sh makes it easy to build services using AWS.
+"""
+
 from setuptools import setup, find_packages
-from os import path
 
-
-here = path.abspath(path.dirname(__file__))
-
-# Get the long description from the README file
-with open(path.join(here, 'README.md')) as f:
-    long_description = f.read()
+from hatch.version import VERSION
 
 setup(
-    name='hatch',
-    version='0.0.1',
-    description='Tool to make AWS easy to use',
-    long_description=long_description,
+    name='hatch-cli',
+    version=VERSION,
+    description='Command line interface for hatch.sh',
+    long_description=__doc__,
     url='https://github.com/mads-hartmann/hatch',
+    download_url='https://github.com/mads-hartmann/hatch/archive/{}.tar.gz'.format(VERSION),
     author='Mads Hartmann Jensen',
     author_email='mads379@gmail.com',
     license='MIT',
     classifiers=[],
-    keywords='',
+    keywords=[],
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    package_data={'': ['README.md']},
     install_requires=[
         'boto===2.47.0',
         'boto3===1.4.4',
