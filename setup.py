@@ -35,7 +35,8 @@ setup(
             'pylint===1.6.5',
             'flake8===3.3.0',
             'flake8-print==2.0.2',
-            'pydocstyle===1.1.1'
+            'pydocstyle===1.1.1',
+            'infi.docopt-completion==0.2.7'
         ]
     },
     entry_points={
