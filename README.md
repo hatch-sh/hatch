@@ -33,7 +33,7 @@ Otherwise you can use pip
 ## Background
 
 Amazon Web Services provides an overwhelming number of services and tools that
-well help you build your products. These services are highly configurable and
+will help you build your products. These services are highly configurable and
 can be shaped to your individual use-cases. This is very powerful but it comes
 at a cost. Building simple products using AWS like a small API, a static
 website, etc. usually requires the use of several different services and takes
@@ -62,7 +62,7 @@ Route53.
 
 To get started simply invoke
 
-    hatch api create my-api
+    hatch api init my-api
 
 Now to play around with the service simply run
 
@@ -81,7 +81,7 @@ is achieved using S3, CloudFront and Route53.
 
 Create your website
 
-    hatch website create
+    hatch website init
 
 If you want to test it out locally you can run
 
