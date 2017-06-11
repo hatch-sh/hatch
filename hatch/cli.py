@@ -34,6 +34,7 @@ from hatch.services.api import Api
 from hatch.services.website import Website
 from hatch.ux.server import run_lambda
 from hatch.ux.website import serve_path
+from hatch.version import VERSION
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +100,7 @@ def configure_logging(verbose=False):
 
 
 def run():
-    arguments = docopt(__doc__, version='hatch 0.1')
+    arguments = docopt(__doc__, version='hatch {}'.format(VERSION))
     if not arguments.get('--silent'):
         configure_logging(verbose=arguments.get('--verbose'))
 
