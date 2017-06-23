@@ -3,6 +3,7 @@ import logging
 import mimetypes
 import os
 import sys
+import uuid
 
 import boto
 import boto3
@@ -18,7 +19,8 @@ ignores = ['.DS_Store', 'website.yml']
 class Website(object):
 
     def __init__(self, name, path, config):
-        self.name = name
+        random_name = str(uuid.uuid4())[-12:]
+        self.name = name or random_name
         self.path = path
         self.config = config
 
@@ -37,7 +39,7 @@ class Website(object):
         if not bucket_exists(bucket):
             region = self.config.region
             kwargs = {'ACL': 'public-read'}
-            if region != 'us-east-1':
+            if region and region != 'us-east-1':
                 # https://github.com/boto/boto3/issues/125
                 kwargs['CreateBucketConfiguration'] = {'LocationConstraint': region}
 

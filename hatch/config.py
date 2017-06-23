@@ -17,35 +17,31 @@ class APIConfig(object):
     @staticmethod
     def parse(config_path):
         with open(config_path, 'r') as stream:
-            try:
-                cfg = yaml.load(stream)
-                return APIConfig(
-                    cfg['name'],
-                    get_region(cfg),
-                    get_account_id()
-                )
-            except yaml.YAMLError as exc:
-                logger.exception(exc)
+            cfg = yaml.load(stream)
+            return APIConfig(
+                cfg['name'],
+                get_region(cfg),
+                get_account_id()
+            )
 
 
 class WebsiteConfig(object):
 
-    def __init__(self, name, region):
+    def __init__(self, name=None, region=None):
         self.name = name
         self.region = region
 
     @staticmethod
     def parse(path):
-        with open(path, 'r') as stream:
-            try:
+        try:
+            with open(path, 'r') as stream:
                 cfg = yaml.load(stream)
-                region = get_region(cfg)
                 return WebsiteConfig(
                     cfg['name'],
-                    region
+                    get_region(cfg)
                 )
-            except yaml.YAMLError as exc:
-                logger.exception(exc)
+        except IOError:
+            return WebsiteConfig()
 
 
 def get_region(cfg):
