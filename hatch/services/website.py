@@ -5,10 +5,10 @@ import os
 import sys
 import uuid
 
-import boto
 import boto3
 
-from hatch.aws.s3 import bucket_exists
+from hatch.aws.s3 import ensure_website_bucket_exists, get_website_endpoint
+from hatch.aws.route53 import ensure_route53_s3_setup
 from hatch.config import WebsiteConfig
 
 logger = logging.getLogger(__name__)
@@ -18,43 +18,36 @@ ignores = ['.DS_Store', 'website.yml']
 
 class Website(object):
 
-    def __init__(self, name, path, config):
-        random_name = str(uuid.uuid4())[-12:]
-        self.name = name or random_name
+    def __init__(self, path, config):
         self.path = path
         self.config = config
+        self._random_name = str(uuid.uuid4())[-12:]
 
     @staticmethod
     def create(path, config_path):
         config = WebsiteConfig.parse(config_path)
-        return Website(config.name, path, config)
+        return Website(path, config)
 
-    def deploy(self):
+    def _get_hosted_zone_id(self):
+        domain = self.config.domain
+        if domain:
+            client = boto3.client('route53')
+            zones = client.list_hosted_zones()['HostedZones']
+            for z in zones:
+                if z['Name'] == domain + '.':
+                    return z['Id']
+
+            logger.warning('"%s" not found in Route53', domain)
+            sys.exit(2)
+        return None
+
+    def _get_bucket_name(self, zone_id):
+        if zone_id:
+            return self.config.domain
+        return self.config.name or self._random_name
+
+    def _upload_artifacts(self, bucket):
         mimetypes.add_type('application/json', '.map')
-
-        s3 = boto3.resource('s3', self.config.region)
-        bucket = s3.Bucket(self.name)
-        bucket_website = bucket.Website()
-
-        if not bucket_exists(bucket):
-            region = self.config.region
-            kwargs = {'ACL': 'public-read'}
-            if region and region != 'us-east-1':
-                # https://github.com/boto/boto3/issues/125
-                kwargs['CreateBucketConfiguration'] = {'LocationConstraint': region}
-
-            bucket.create(**kwargs)
-            bucket_website.put(
-                WebsiteConfiguration={
-                    'IndexDocument': {
-                        'Suffix': 'index.html'
-                    },
-                    'ErrorDocument': {
-                        'Key': '404.html'
-                    }
-                }
-            )
-
         for artifact in recursive_glob(self.path, '*'):
             mime_type = mimetypes.guess_type(artifact)
 
@@ -65,13 +58,34 @@ class Website(object):
             [content_type, _] = mime_type
 
             logger.debug('Uploading %s [%s]', artifact, content_type)
-            bucket.upload_file(artifact, artifact.replace('{}/'.format(self.path), ''), ExtraArgs={
+            file_path = artifact.replace('{}/'.format(self.path), '')
+            bucket.upload_file(artifact, file_path, ExtraArgs={
                 'ACL': 'public-read',
                 'ContentType': content_type
             })
 
-        bucket = boto.connect_s3().get_bucket(self.name)
-        url = 'http://{}'.format(bucket.get_website_endpoint())
+    def deploy(self):
+        zone_id = self._get_hosted_zone_id()
+        bucket_name = self._get_bucket_name(zone_id)
+
+        s3 = boto3.resource('s3', self.config.region)
+        bucket = s3.Bucket(bucket_name)
+
+        ensure_website_bucket_exists(bucket=bucket, region=self.config.region)
+        self._upload_artifacts(bucket)
+
+        website_endpoint = get_website_endpoint(bucket_name)
+
+        if zone_id:
+            ensure_route53_s3_setup(
+                zone_id=zone_id,
+                bucket_name=bucket_name,
+                website_endpoint=website_endpoint
+            )
+            url = 'http://{}'.format(self.config.domain)
+        else:
+            url = 'http://{}'.format(website_endpoint)
+
         logger.info('Website uploaded to %s', url)
 
 

@@ -27,9 +27,12 @@ class APIConfig(object):
 
 class WebsiteConfig(object):
 
-    def __init__(self, name=None, region=None):
+    def __init__(self, name=None, region=None, domain=None):
         self.name = name
         self.region = region
+        self.domain = domain
+        if self.domain and self.name:
+            logger.warning('Configuration warning: remove "name" when using "domain"')
 
     @staticmethod
     def parse(path):
@@ -37,8 +40,9 @@ class WebsiteConfig(object):
             with open(path, 'r') as stream:
                 cfg = yaml.load(stream)
                 return WebsiteConfig(
-                    cfg['name'],
-                    get_region(cfg)
+                    name=cfg.get('name'),
+                    region=get_region(cfg),
+                    domain=cfg.get('domain')
                 )
         except IOError:
             return WebsiteConfig()
