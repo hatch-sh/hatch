@@ -23,7 +23,7 @@ project as we have not implemented all of the features yet.
 The Hatch command line interface can be installed using [Homebrew][homebrew] if
 you're on macOS
 
-    brew tap mads-hartmann/hatch git@github.com:mads-hartmann/hatch.git
+    brew tap hatch-sh/hatch
     brew install hatch
 
 Otherwise you can use pip
