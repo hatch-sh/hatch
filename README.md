@@ -2,7 +2,7 @@
 
 Hatch.sh makes it easy to build products using [Amazon Web Services (AWS)][aws].
 
-[![Build Status](https://travis-ci.org/mads-hartmann/hatch.svg?branch=master)](https://travis-ci.org/mads-hartmann/hatch)
+[![Build Status](https://travis-ci.org/hatch-sh/hatch.svg?branch=master)](https://travis-ci.org/hatch-sh/hatch)
 
 **NOTICE:** We're still experimenting and trying to find the best developer
 experience. The README will not necessarily reflect the current state of the
@@ -97,11 +97,11 @@ When you're ready to publish it run
 
 ### Event handlers
 
-**TODO**: AWS Lambda + something. This is just the generalized version of a cron job. Perhaps we shouldn't have two. 
+**TODO**: AWS Lambda + something. This is just the generalized version of a cron job. Perhaps we shouldn't have two.
 
 ## Develop on hatch
 
-    git clone git@github.com:mads-hartmann/hatch.git && cd hatch
+    git clone git@github.com:hatch-sh/hatch.git && cd hatch
     make setup
     .venv/bin/hatch api deploy examples/api
     .venv/bin/hatch api start examples/api
