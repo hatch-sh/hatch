@@ -38,6 +38,8 @@ from hatch.version import VERSION
 
 logger = logging.getLogger(__name__)
 
+VERBOSE_LOG_FORMAT = '%(asctime)s %(name)-45s %(levelname)-8s %(message)s'
+
 
 def configuration_error(message):
     logger.error('Error %s', message)
@@ -47,6 +49,7 @@ def configuration_error(message):
 
 
 def check_credentials():
+    logger.debug('Checking credentials')
     try:
         session = botocore.session.get_session()
         credentials = session.get_credentials()
@@ -58,6 +61,7 @@ def check_credentials():
 
 
 def website_command(arguments):
+    logger.debug('Running website command')
     path = arguments.get('<path>', './website')
     config = arguments.get('[--config-file]', '{}/website.yml'.format(path))
 
@@ -74,6 +78,7 @@ def website_command(arguments):
 
 
 def api_command(arguments):
+    logger.debug('Running API command')
     api_path = arguments.get('<path>', './api')
 
     if not os.path.isdir(api_path):
@@ -94,9 +99,9 @@ def api_command(arguments):
 def configure_logging(verbose=False):
     logging.basicConfig(
         level=logging.DEBUG if verbose else logging.CRITICAL,
-        format=logging.BASIC_FORMAT if verbose else '%(message)s'
+        format=VERBOSE_LOG_FORMAT if verbose else '%(message)s'
     )
-    logging.getLogger('hatch').setLevel(logging.DEBUG)
+    logging.getLogger('hatch').setLevel(logging.INFO)
 
 
 def run():
@@ -104,6 +109,7 @@ def run():
     if not arguments.get('--silent'):
         configure_logging(verbose=arguments.get('--verbose'))
 
+    logger.info('Hatching...')
     check_credentials()
 
     if arguments.get('api'):
