@@ -6,10 +6,13 @@ import sys
 import uuid
 
 import boto3
+from botocore.client import ClientError
 
-from hatch.aws.s3 import ensure_website_bucket_exists, get_website_endpoint
 from hatch.aws.route53 import ensure_route53_s3_setup
+from hatch.aws.s3 import ensure_website_bucket_exists, get_website_endpoint
+from hatch.aws.utils import get_error_code
 from hatch.config import WebsiteConfig
+
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +40,7 @@ class Website(object):
                 if z['Name'] == domain + '.':
                     return z['Id']
 
-            logger.warning('"%s" not found in Route53', domain)
+            logger.warning('Error: "%s" not found in Route53', domain)
             sys.exit(2)
         return None
 
@@ -65,28 +68,35 @@ class Website(object):
             })
 
     def deploy(self):
-        zone_id = self._get_hosted_zone_id()
-        bucket_name = self._get_bucket_name(zone_id)
+        try:
+            zone_id = self._get_hosted_zone_id()
+            bucket_name = self._get_bucket_name(zone_id)
 
-        s3 = boto3.resource('s3', self.config.region)
-        bucket = s3.Bucket(bucket_name)
+            s3 = boto3.resource('s3', self.config.region)
+            bucket = s3.Bucket(bucket_name)
 
-        ensure_website_bucket_exists(bucket=bucket, region=self.config.region)
-        self._upload_artifacts(bucket)
+            ensure_website_bucket_exists(bucket=bucket, region=self.config.region)
+            self._upload_artifacts(bucket)
 
-        website_endpoint = get_website_endpoint(bucket_name)
+            website_endpoint = get_website_endpoint(bucket_name)
 
-        if zone_id:
-            ensure_route53_s3_setup(
-                zone_id=zone_id,
-                bucket_name=bucket_name,
-                website_endpoint=website_endpoint
-            )
-            url = 'http://{}'.format(self.config.domain)
-        else:
-            url = 'http://{}'.format(website_endpoint)
+            if zone_id:
+                ensure_route53_s3_setup(
+                    zone_id=zone_id,
+                    bucket_name=bucket_name,
+                    website_endpoint=website_endpoint
+                )
+                url = 'http://{}'.format(self.config.domain)
+            else:
+                url = 'http://{}'.format(website_endpoint)
 
-        logger.info('Website uploaded to %s', url)
+            logger.info('Website uploaded to %s', url)
+        except ClientError as ex:
+            error_code = get_error_code(ex)
+            if error_code == 'BucketAlreadyExists':
+                logger.error('Error: The name "%s" is already taken.', bucket_name)
+                sys.exit(1)
+            raise
 
 
 def recursive_glob(folder, pattern):
