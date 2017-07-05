@@ -16,11 +16,11 @@ Usage:
   hatch --version
 
 Options:
-  -h --help      Show this help.
-  --version      Show version.
-  --config-file  Path to config file.
-  --silent       Don't output to stdout.
-  --verbose      Output a lot to stdout.
+  -h --help         Show this help.
+  --version         Show version.
+  --config=<config> Path to config file.
+  --silent          Don't output to stdout.
+  --verbose         Output a lot to stdout.
 """
 
 import logging
@@ -39,6 +39,13 @@ from hatch.version import VERSION
 logger = logging.getLogger(__name__)
 
 VERBOSE_LOG_FORMAT = '%(asctime)s %(name)-45s %(levelname)-8s %(message)s'
+
+
+def get_config_path(path, arguments, file_name):
+    config_path = arguments.get('--config') or path
+    if os.path.isfile(config_path):
+        return config_path
+    return os.path.join(config_path, file_name)
 
 
 def configuration_error(message):
@@ -63,13 +70,13 @@ def check_credentials():
 def website_command(arguments):
     logger.debug('Running website command')
     path = arguments.get('<path>', './website')
-    config = arguments.get('[--config-file]', '{}/website.yml'.format(path))
 
     if not os.path.isdir(path):
         logger.error('No such directory: %s', path)
         sys.exit(1)
 
-    website = Website.create(path, config)
+    config_path = get_config_path(path, arguments, 'website.yml')
+    website = Website.create(path, config_path)
 
     if arguments.get('deploy'):
         website.deploy()
@@ -79,16 +86,14 @@ def website_command(arguments):
 
 def api_command(arguments):
     logger.debug('Running API command')
-    api_path = arguments.get('<path>', './api')
+    path = arguments.get('<path>', './api')
 
-    if not os.path.isdir(api_path):
-        logger.error('No such directory: %s', api_path)
+    if not os.path.isdir(path):
+        logger.error('No such directory: %s', path)
         sys.exit(1)
 
-    config_path = arguments.get(
-        '[--config-file]',
-        '{}/api.yml'.format(api_path))
-    api = Api.create(api_path, config_path)
+    config_path = get_config_path(path, arguments, 'api.yml')
+    api = Api.create(path, config_path)
 
     if arguments.get('deploy'):
         api.deploy()
