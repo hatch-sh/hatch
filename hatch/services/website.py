@@ -8,6 +8,7 @@ import uuid
 import boto3
 from botocore.client import ClientError
 
+from hatch.aws.cloudfront import ensure_cloudfront_s3_setup
 from hatch.aws.route53 import ensure_route53_s3_setup
 from hatch.aws.s3 import ensure_website_bucket_exists, get_website_endpoint
 from hatch.aws.utils import get_error_code
@@ -72,6 +73,7 @@ class Website(object):
         try:
             zone_id = self._get_hosted_zone_id()
             bucket_name = self._get_bucket_name(zone_id)
+            custom_domain = self.config.domain if zone_id else None
 
             s3 = boto3.resource('s3', self.config.region)
             bucket = s3.Bucket(bucket_name)
@@ -81,13 +83,17 @@ class Website(object):
 
             website_endpoint = get_website_endpoint(bucket_name)
 
-            if zone_id:
+            if custom_domain:
                 ensure_route53_s3_setup(
                     zone_id=zone_id,
                     bucket_name=bucket_name,
                     website_endpoint=website_endpoint
                 )
-                url = 'http://{}'.format(self.config.domain)
+                url = 'http://{}'.format(custom_domain)
+                ensure_cloudfront_s3_setup(
+                    bucket_name=bucket_name,
+                    domain_name=custom_domain,
+                )
             else:
                 url = 'http://{}'.format(website_endpoint)
 
