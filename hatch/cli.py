@@ -1,3 +1,4 @@
+# coding=UTF-8
 # pylint: disable=locally-disabled, C0103
 
 """
@@ -30,9 +31,7 @@ import sys
 import botocore.session
 from docopt import docopt
 
-from hatch.services.api import Api
 from hatch.services.website import Website
-from hatch.ux.server import run_lambda
 from hatch.ux.website import serve_path
 from hatch.version import VERSION
 
@@ -86,19 +85,7 @@ def website_command(arguments):
 
 def api_command(arguments):
     logger.debug('Running API command')
-    path = arguments.get('<path>', './api')
-
-    if not os.path.isdir(path):
-        logger.error('No such directory: %s', path)
-        sys.exit(1)
-
-    config_path = get_config_path(path, arguments, 'api.yml')
-    api = Api.create(path, config_path)
-
-    if arguments.get('deploy'):
-        api.deploy()
-    elif arguments.get('start'):
-        run_lambda(api, 8888)
+    logger.info("👷‍♀️ Support for serverless APIs coming soon 🚧")
 
 
 def configure_logging(verbose=False):
