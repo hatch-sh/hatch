@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
-set -e
+set -euo pipefail
 
 source scripts/lib.sh
 
