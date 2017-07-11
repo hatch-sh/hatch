@@ -28,6 +28,8 @@ clean:
 distclean: clean;
 	rm -rf .venv
 	rm -rf /usr/local/bin/hatch
+	rm -rf /usr/local/share/zsh/site-functions/_hatch
+	rm- rf /usr/local/etc/bash_completion.d/hatch.sh
 
 lint: $(lint_targets)
 format: .build/autopep8.made

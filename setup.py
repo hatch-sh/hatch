@@ -19,10 +19,7 @@ setup(
     classifiers=[],
     keywords=[],
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    package_data={'': [
-        'README.md',
-        'etc'
-    ]},
+    package_data={'': ['README.md']},
     install_requires=[
         'boto==2.47.0',
         'boto3==1.4.4',

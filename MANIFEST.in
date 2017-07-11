@@ -1,0 +1,2 @@
+include etc/bash/hatch.sh
+include etc/zsh/_hatch
