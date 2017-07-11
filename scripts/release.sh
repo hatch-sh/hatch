@@ -5,18 +5,15 @@ set -e
 
 source scripts/lib.sh
 
-create_release() {
-    local version
-    local message
-
-    version=$1
-    message=$2
+function create_release {
+    local version=$1
+    local message=$2
 
     git tag "${version}" -m "${message}"
     git push --tags origin master
 }
 
-upload_pypi_package() {
+function upload_pypi_package {
     python setup.py sdist upload -r pypitest
     python setup.py sdist upload -r pypi
 }

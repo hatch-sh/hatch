@@ -95,14 +95,6 @@ When you're ready to publish it run
 
     hatch website deploy
 
-### Cron jobs
-
-**TODO**: I'm thinking AWS Lambda + something.
-
-### Event handlers
-
-**TODO**: AWS Lambda + something. This is just the generalized version of a cron job. Perhaps we shouldn't have two.
-
 ## Develop on hatch
 
     git clone git@github.com:hatch-sh/hatch.git && cd hatch
@@ -128,6 +120,10 @@ running your code on AWS Labmda/API Gateway.
 The services are in `./hatch/services`. The mapping to AWS are in
 `./hatch/aws` and the local development setup things can be found in
 `./hatch/ux`.
+
+### Creating a new release
+
+    ./scripts/release <MESSAGE>
 
 [aws]: https://aws.amazon.com/
 [homebrew]: https://brew.sh
