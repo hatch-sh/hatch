@@ -18,9 +18,8 @@ setup: $(setup_targets)
 
 install:
 	python setup.py install
-	.venv/bin/docopt-completion hatch --manual-zsh
-	mv _hatch .venv/bin/_hatch
-	ln -s $(abspath .venv/bin/_hatch) /usr/local/share/zsh/site-functions/_hatch
+	ln -sf $(abspath .venv/bin/_hatch) /usr/local/share/zsh/site-functions/_hatch
+	ln -sf $(abspath ./etc/bash/hatch.sh /usr/local/etc/bash_completion.d/hatch.sh)
 
 clean:
 	rm -rf .build build dist hatch.egg-info

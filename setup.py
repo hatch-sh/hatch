@@ -19,7 +19,10 @@ setup(
     classifiers=[],
     keywords=[],
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    package_data={'': ['README.md']},
+    package_data={'': [
+        'README.md',
+        'etc'
+    ]},
     install_requires=[
         'boto==2.47.0',
         'boto3==1.4.4',
@@ -35,8 +38,7 @@ setup(
             'pylint==1.6.5',
             'flake8==3.3.0',
             'flake8-print==2.0.2',
-            'pydocstyle==1.1.1',
-            'infi.docopt-completion==0.2.7'
+            'pydocstyle==1.1.1'
         ]
     },
     entry_points={

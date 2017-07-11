@@ -26,6 +26,10 @@ you're on macOS
     brew tap hatch-sh/hatch
     brew install hatch
 
+If you have the `bash-completion` [homebrew][homebrew] package installed and
+configured or if you're using [oh-my-zsh][oh-my-zsh] then tab-completion should
+just work out of the box.
+
 Otherwise you can use pip
 
     pip install hatch-cli
@@ -127,3 +131,4 @@ The services are in `./hatch/services`. The mapping to AWS are in
 
 [aws]: https://aws.amazon.com/
 [homebrew]: https://brew.sh
+[oh-my-zsh]: https://github.com/robbyrussell/oh-my-zsh
