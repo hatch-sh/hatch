@@ -1,130 +1,44 @@
 # hatch.sh
 
-Hatch.sh makes it easy to build products using [Amazon Web Services (AWS)][aws].
+Easy deployment of static websites to [Amazon Web Services (AWS)][aws].
 
 [![Build Status](https://travis-ci.org/hatch-sh/hatch.svg?branch=master)](https://travis-ci.org/hatch-sh/hatch)
 
-**NOTICE:** We're still experimenting and trying to find the best developer
-experience. The README will not necessarily reflect the current state of the
-project as we have not implemented all of the features yet.
+Simple command line interface for managing your static websites on AWS — Hatch
+takes cares of creating S3 buckets, configuring your custom domains, and
+setting up CloudFront — All from the comforts of your command line. For more
+information check out [hatch.sh][hatch.sh]
 
-## Table of contents
+## Installing from source
 
-* [Installation](#installation)
-* [Background](#background)
-* [Getting Started](#getting-started)
-* [Services](#services)
-  * [Stateless HTTP APIs](#stateless-http-apis)
-  * [Static Websites](#static-websites)
-* [Develop on hatch](#develop-on-hatch)
+If you want to install hatch from source simply follow these instructions
 
-## Installation
+    git clone git@github.com:hatch-sh/hatch.git
+    cd hatch
+    make install
 
-The Hatch command line interface can be installed using [Homebrew][homebrew] if
-you're on macOS
+If you want to uninstall hatch again then run
 
-    brew tap hatch-sh/hatch
-    brew install hatch
+    make distclean
 
-If you have the `bash-completion` [homebrew][homebrew] package installed and
-configured or if you're using [oh-my-zsh][oh-my-zsh] then tab-completion should
-just work out of the box.
+## Working on hatch
 
-Otherwise you can use pip
-
-    pip install hatch-cli
-
-## Background
-
-Amazon Web Services provides an overwhelming number of services and tools that
-will help you build your products. These services are highly configurable and
-can be shaped to your individual use-cases. This is very powerful but it comes
-at a cost. Building simple products using AWS like a small API, a static
-website, etc. usually requires the use of several different services and takes
-a huge effort when it comes to configuration. We wanted to change that with
-Hatch. By focusing on a few simple use-cases we've been able to automate the
-entire creation and deployment for you so you can focus on building your
-product.
-
-## Getting Started
-
-In order to use Hatch you need to have an [AWS][aws] account.
-
-**TODO**: Finish guide on how to get your credentials and show an example
-`~/.aws/config` file.
-
-## Services
-
-You can use Hatch to create various kinds of services on AWS. The following
-section describes how to get started with each service.
-
-### Stateless HTTP APIs
-
-If you want to build a simple stateless API that can be reached over HTTP(s)
-then this is for you. This is achieved using API Gateway, AWS Lambda, and
-Route53.
-
-To get started simply invoke
-
-    hatch api init my-api
-
-Now to play around with the service simply run
-
-    cd api
-    hatch api start
-
-Once you're ready to publish your API you simply run
-
-    hatch api deploy
-
-### Static Websites
-
-Hatch doesn't care if you're hand-writing your HTML or if you're using a build
-tool like webpack. We just need the static files and we'll put them online. This
-is achieved using S3, CloudFront and Route53.
-
-Create your website
-
-    hatch website init
-
-If you want to test it out locally you can run
-
-    hatch website start
-
-When you're ready to publish it run
-
-    hatch website deploy
-
-## Develop on hatch
+If you want to hack around on the hatch source code then follow these
+instructions
 
     git clone git@github.com:hatch-sh/hatch.git && cd hatch
     make setup
-    .venv/bin/hatch api deploy examples/api
-    .venv/bin/hatch api start examples/api
+
+Now you can invoke hatch like this
+
     .venv/bin/hatch website deploy examples/website
     .venv/bin/hatch website start examples/website
 
-### Project Overview
-
-The general approach is that each kind of service has it's own file in
-`./hatch/services` where we have a model of the service. E.g. for the HTTP
-API we have `./hatch/services/api.py` which contains an `Api` class that
-represents our model of a HTTP API.
-
-This modal can then be used for two things. Firstly it is used to figure out
-what to deploy to AWS, and secondly it's used to emulate the service for local
-development. Again, taking the HTTP API as an example, we use the `Api` class
-to create a Tornado server we can run locally that emulate the configuration of
-running your code on AWS Labmda/API Gateway.
-
-The services are in `./hatch/services`. The mapping to AWS are in
-`./hatch/aws` and the local development setup things can be found in
-`./hatch/ux`.
-
-### Creating a new release
+## Creating a new release
 
     ./scripts/release <MESSAGE>
 
 [aws]: https://aws.amazon.com/
+[hatch.sh]: https://hatch.sh
 [homebrew]: https://brew.sh
 [oh-my-zsh]: https://github.com/robbyrussell/oh-my-zsh
