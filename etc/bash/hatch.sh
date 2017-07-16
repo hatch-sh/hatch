@@ -5,14 +5,11 @@ _hatch()
     cur="${COMP_WORDS[COMP_CWORD]}"
 
     if [ $COMP_CWORD -eq 1 ]; then
-        COMPREPLY=( $( compgen -W '-h --help -h --help --version website api' -- $cur) )
+        COMPREPLY=( $( compgen -W ' website' -- $cur) )
     else
         case ${COMP_WORDS[1]} in
             website)
             _hatch_website
-        ;;
-            api)
-            _hatch_api
         ;;
         esac
 
@@ -45,7 +42,7 @@ _hatch_website_start()
     cur="${COMP_WORDS[COMP_CWORD]}"
 
     if [ $COMP_CWORD -ge 3 ]; then
-        COMPREPLY=( $( compgen -fW ' ' -- $cur) )
+        COMPREPLY=( $( compgen -W ' ' -- $cur) )
     fi
 }
 
@@ -55,47 +52,7 @@ _hatch_website_deploy()
     cur="${COMP_WORDS[COMP_CWORD]}"
 
     if [ $COMP_CWORD -ge 3 ]; then
-        COMPREPLY=( $( compgen -fW ' ' -- $cur) )
-    fi
-}
-
-_hatch_api()
-{
-    local cur
-    cur="${COMP_WORDS[COMP_CWORD]}"
-
-    if [ $COMP_CWORD -eq 2 ]; then
-        COMPREPLY=( $( compgen -W ' start deploy' -- $cur) )
-    else
-        case ${COMP_WORDS[2]} in
-            start)
-            _hatch_api_start
-        ;;
-            deploy)
-            _hatch_api_deploy
-        ;;
-        esac
-
-    fi
-}
-
-_hatch_api_start()
-{
-    local cur
-    cur="${COMP_WORDS[COMP_CWORD]}"
-
-    if [ $COMP_CWORD -ge 3 ]; then
-        COMPREPLY=( $( compgen -fW ' ' -- $cur) )
-    fi
-}
-
-_hatch_api_deploy()
-{
-    local cur
-    cur="${COMP_WORDS[COMP_CWORD]}"
-
-    if [ $COMP_CWORD -ge 3 ]; then
-        COMPREPLY=( $( compgen -fW ' ' -- $cur) )
+        COMPREPLY=( $( compgen -W '--path= --domain= --name= ' -- $cur) )
     fi
 }
 

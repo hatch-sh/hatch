@@ -24,11 +24,6 @@ _hatch ()
 
     _arguments -C \
         ':command:->command' \
-		'(-h)-h[Show this help.]' \
-		'(--help)--help[Show this help.]' \
-		'(-h)-h[Show this help.]' \
-		'(--help)--help[Show this help.]' \
-		'(--version)--version[Show version.]' \
         '*::options:->options'
 
     case $state in
@@ -36,7 +31,6 @@ _hatch ()
             local -a subcommands
             subcommands=(
 				'website'
-				'api'
             )
             _values 'hatch' $subcommands
         ;;
@@ -45,9 +39,6 @@ _hatch ()
             case $line[1] in
                 website)
                     _hatch-website
-                ;;
-                api)
-                    _hatch-api
                 ;;
             esac
         ;;
@@ -93,14 +84,9 @@ _hatch-website-start ()
     local context state state_descr line
     typeset -A opt_args
 
-    if [[ $words[$CURRENT] == -* ]] ; then
-        _arguments -C \
+    _arguments -C \
         ':command:->command' \
 
-    else
-        myargs=('<path>')
-        _message_next_arg
-    fi
 }
 
 _hatch-website-deploy ()
@@ -108,77 +94,12 @@ _hatch-website-deploy ()
     local context state state_descr line
     typeset -A opt_args
 
-    if [[ $words[$CURRENT] == -* ]] ; then
-        _arguments -C \
-        ':command:->command' \
-
-    else
-        myargs=('<path>')
-        _message_next_arg
-    fi
-}
-
-_hatch-api ()
-{
-    local context state state_descr line
-    typeset -A opt_args
-
     _arguments -C \
         ':command:->command' \
-        '*::options:->options'
+		'(--path=-)--path=-' \
+		'(--domain=-)--domain=-' \
+		'(--name=-)--name=-' \
 
-    case $state in
-        (command)
-            local -a subcommands
-            subcommands=(
-				'start'
-				'deploy'
-            )
-            _values 'hatch api' $subcommands
-        ;;
-
-        (options)
-            case $line[1] in
-                start)
-                    _hatch-api-start
-                ;;
-                deploy)
-                    _hatch-api-deploy
-                ;;
-            esac
-        ;;
-    esac
-
-}
-
-_hatch-api-start ()
-{
-    local context state state_descr line
-    typeset -A opt_args
-
-    if [[ $words[$CURRENT] == -* ]] ; then
-        _arguments -C \
-        ':command:->command' \
-
-    else
-        myargs=('<path>')
-        _message_next_arg
-    fi
-}
-
-_hatch-api-deploy ()
-{
-    local context state state_descr line
-    typeset -A opt_args
-
-    if [[ $words[$CURRENT] == -* ]] ; then
-        _arguments -C \
-        ':command:->command' \
-
-    else
-        myargs=('<path>')
-        _message_next_arg
-    fi
 }
 
 

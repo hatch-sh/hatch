@@ -4,8 +4,8 @@
 """
 Hatch
 
-Hatch makes it easy to manage your static websites on AWS — Hatch takes cares
-of creating S3 buckets and configuring your custom domains in Route53 — All
+Hatch makes it easy to manage your static websites on AWS - Hatch takes cares
+of creating S3 buckets and configuring your custom domains in Route53 - All
 from the comforts of your command line.
 
 Usage:
@@ -76,7 +76,7 @@ def website_command(arguments):
     file_config = None
     if config_path is None and os.path.isfile('website.yml'):
         file_config = WebsiteConfig.parse('website.yml')
-    elif not config_path is None:
+    elif config_path is not None:
         file_config = WebsiteConfig.parse(config_path)
 
     arguments_config = WebsiteConfig(path, name, region, domain)
@@ -112,12 +112,15 @@ def run():
     if not arguments.get('--silent'):
         configure_logging(verbose=arguments.get('--verbose'))
 
-    logger.info('Hatching...')
-    check_credentials()
+    if arguments.get('api') is None and arguments.get('website') is None:
+        logger.info('use hatch -h for help')
+        sys.exit(0)
 
     if arguments.get('api'):
         api_command(arguments)
     elif arguments.get('website'):
+        logger.info('Hatching...')
+        check_credentials()
         website_command(arguments)
 
 
