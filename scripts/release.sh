@@ -13,7 +13,6 @@ function create_release {
 }
 
 function upload_pypi_package {
-    python setup.py sdist upload -r pypitest
     python setup.py sdist upload -r pypi
 }
 

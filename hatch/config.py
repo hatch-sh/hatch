@@ -52,6 +52,7 @@ class WebsiteConfig(object):
             with open(path, 'r') as stream:
                 cfg = yaml.load(stream)
                 return WebsiteConfig(
+                    path=cfg.get('path'),
                     name=cfg.get('name'),
                     region=get_region(cfg),
                     domain=cfg.get('domain')
@@ -66,9 +67,12 @@ class WebsiteConfig(object):
         if other is None:
             return self
 
+        # Don't override name if domain is already set
+        name = other.name if self.domain is None and self.name is None else self.name
+
         return WebsiteConfig(
             path=self.path if self.path else other.path,
-            name=self.name if self.name else other.name,
+            name=name,
             region=self.region if self.region else other.region,
             domain=self.domain if self.domain else other.domain
         )

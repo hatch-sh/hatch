@@ -15,7 +15,7 @@ from hatch.aws.utils import get_error_code
 
 logger = logging.getLogger(__name__)
 
-ignores = ['.DS_Store', 'website.yml']
+ignores = ['.DS_Store', '.gitignore', 'website.yml']
 
 
 class Website(object):
@@ -56,6 +56,10 @@ class Website(object):
                 sys.exit(1)
 
             [content_type, _] = mime_type
+
+            if content_type is None:
+                logger.error('Unknown content-type for %s', artifact)
+                sys.exit(1)
 
             logger.debug('Uploading %s [%s]', artifact, content_type)
             file_path = artifact.replace('{}/'.format(self.config.path), '')
