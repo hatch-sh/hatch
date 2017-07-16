@@ -11,7 +11,6 @@ from botocore.client import ClientError
 from hatch.aws.route53 import ensure_route53_s3_setup
 from hatch.aws.s3 import ensure_website_bucket_exists, get_website_endpoint
 from hatch.aws.utils import get_error_code
-from hatch.config import WebsiteConfig
 
 
 logger = logging.getLogger(__name__)
@@ -21,15 +20,13 @@ ignores = ['.DS_Store', 'website.yml']
 
 class Website(object):
 
-    def __init__(self, path, config):
-        self.path = path
+    def __init__(self, config):
         self.config = config
         self._random_name = str(uuid.uuid4())[-12:]
 
     @staticmethod
-    def create(path, config_path):
-        config = WebsiteConfig.parse(config_path)
-        return Website(path, config)
+    def create(config):
+        return Website(config)
 
     def _get_hosted_zone_id(self):
         domain = self.config.domain
@@ -51,7 +48,7 @@ class Website(object):
 
     def _upload_artifacts(self, bucket):
         mimetypes.add_type('application/json', '.map')
-        for artifact in recursive_glob(self.path, '*'):
+        for artifact in recursive_glob(self.config.path, '*'):
             mime_type = mimetypes.guess_type(artifact)
 
             if mime_type is None:
@@ -61,7 +58,7 @@ class Website(object):
             [content_type, _] = mime_type
 
             logger.debug('Uploading %s [%s]', artifact, content_type)
-            file_path = artifact.replace('{}/'.format(self.path), '')
+            file_path = artifact.replace('{}/'.format(self.config.path), '')
             bucket.upload_file(artifact, file_path, ExtraArgs={
                 'ACL': 'public-read',
                 'ContentType': content_type
@@ -95,6 +92,10 @@ class Website(object):
             error_code = get_error_code(ex)
             if error_code == 'BucketAlreadyExists':
                 logger.error('Error: The name "%s" is already taken.', bucket_name)
+                sys.exit(1)
+            if error_code == 'InvalidBucketName':
+                logger.error('Error: Invalid bucket name "%s".', bucket_name)
+                logger.error('\nSee bucket naming rules here:\nhttp://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html#bucketnamingrules\n')
                 sys.exit(1)
             raise
 

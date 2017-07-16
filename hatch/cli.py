@@ -4,24 +4,21 @@
 """
 Hatch
 
-hatch is a tool that makes it easy to build products using AWS. It uses
-conventions to automate the creation of things like static website,
-HTTP API's etc. quick and easy.
+Hatch makes it easy to manage your static websites on AWS — Hatch takes cares
+of creating S3 buckets and configuring your custom domains in Route53 — All
+from the comforts of your command line.
 
 Usage:
-  hatch api start [options] <path>
-  hatch api deploy [options] <path>
-  hatch website start [options] <path>
-  hatch website deploy [options] <path>
-  hatch -h | --help
-  hatch --version
+  hatch [options]
+  hatch [options] website start
+  hatch [options] website deploy [--path=<path>] [--domain=<domain>] [--name=<name>]
 
 Options:
-  -h --help         Show this help.
-  --version         Show version.
-  --config=<config> Path to config file.
-  --silent          Don't output to stdout.
-  --verbose         Output a lot to stdout.
+  -h --help            Show this help.
+  --version            Show version.
+  --silent             Don't output to stdout.
+  --verbose            Output a lot to stdout.
+  --config-file <path> Path to configuration file [default: website.yml]
 """
 
 import logging
@@ -34,6 +31,7 @@ from docopt import docopt
 from hatch.services.website import Website
 from hatch.ux.website import serve_path
 from hatch.version import VERSION
+from hatch.config import WebsiteConfig
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +39,7 @@ VERBOSE_LOG_FORMAT = '%(asctime)s %(name)-45s %(levelname)-8s %(message)s'
 
 
 def get_config_path(path, arguments, file_name):
-    config_path = arguments.get('--config') or path
+    config_path = arguments.get('--config-file') or path
     if os.path.isfile(config_path):
         return config_path
     return os.path.join(config_path, file_name)
@@ -68,14 +66,27 @@ def check_credentials():
 
 def website_command(arguments):
     logger.debug('Running website command')
-    path = arguments.get('<path>', './website')
 
-    if not os.path.isdir(path):
+    config_path = arguments.get('--config-file')
+    name = arguments.get('--name')
+    domain = arguments.get('--domain')
+    path = arguments.get('--path')
+    region = arguments.get('--region')
+
+    file_config = None
+    if config_path is None and os.path.isfile('website.yml'):
+        file_config = WebsiteConfig.parse('website.yml')
+    elif not config_path is None:
+        file_config = WebsiteConfig.parse(config_path)
+
+    arguments_config = WebsiteConfig(path, name, region, domain)
+    config = arguments_config.merge(file_config).merge(WebsiteConfig.defaults())
+
+    if not os.path.isdir(config.path):
         logger.error('No such directory: %s', path)
         sys.exit(1)
 
-    config_path = get_config_path(path, arguments, 'website.yml')
-    website = Website.create(path, config_path)
+    website = Website.create(config)
 
     if arguments.get('deploy'):
         website.deploy()

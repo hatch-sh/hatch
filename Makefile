@@ -18,8 +18,8 @@ setup: $(setup_targets)
 
 install:
 	python setup.py install
-	ln -sf $(abspath .venv/bin/_hatch) /usr/local/share/zsh/site-functions/_hatch
-	ln -sf $(abspath ./etc/bash/hatch.sh) /usr/local/etc/bash_completion.d/hatch.sh
+	ln -sf $(abspath etc/zsh/_hatch) /usr/local/share/zsh/site-functions/_hatch
+	ln -sf $(abspath etc/bash/hatch.sh) /usr/local/etc/bash_completion.d/hatch.sh
 
 clean:
 	rm -rf .build build dist hatch.egg-info
