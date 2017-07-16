@@ -90,10 +90,12 @@ class Website(object):
                     website_endpoint=website_endpoint
                 )
                 url = 'http://{}'.format(custom_domain)
-                ensure_cloudfront_s3_setup(
-                    bucket_name=bucket_name,
-                    domain_name=custom_domain,
-                )
+
+                if self.config.cdn:
+                    ensure_cloudfront_s3_setup(
+                        bucket_name=bucket_name,
+                        domain_name=custom_domain,
+                    )
             else:
                 url = 'http://{}'.format(website_endpoint)
 

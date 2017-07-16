@@ -29,11 +29,12 @@ class APIConfig(object):
 
 class WebsiteConfig(object):
 
-    def __init__(self, path=None, name=None, region=None, domain=None):
+    def __init__(self, path=None, name=None, region=None, domain=None, cdn=None):
         self.path = path
         self.name = name
         self.region = region
         self.domain = domain
+        self.cdn = cdn
         if self.domain and self.name:
             logger.warning('Configuration warning: remove "name" when using "domain"')
 
@@ -43,7 +44,8 @@ class WebsiteConfig(object):
             path=".",
             name=str(uuid.uuid4())[-12:],
             region=get_region({}),
-            domain=None
+            domain=None,
+            cdn=False
         )
 
     @staticmethod
@@ -55,7 +57,8 @@ class WebsiteConfig(object):
                     path=cfg.get('path'),
                     name=cfg.get('name'),
                     region=get_region(cfg),
-                    domain=cfg.get('domain')
+                    domain=cfg.get('domain'),
+                    cdn=cfg.get('cdn')
                 )
         except IOError:
             logger.error('Configuration file does not exist: {}'.format(path))
@@ -74,7 +77,8 @@ class WebsiteConfig(object):
             path=self.path if self.path else other.path,
             name=name,
             region=self.region if self.region else other.region,
-            domain=self.domain if self.domain else other.domain
+            domain=self.domain if self.domain else other.domain,
+            cdn=self.cdn if self.cdn else other.cdn
         )
 
 
