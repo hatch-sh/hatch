@@ -16,10 +16,9 @@ setup(
     author='Mads Hartmann Jensen',
     author_email='mads379@gmail.com',
     license='MIT',
-    classifiers=[],
-    keywords=[],
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     package_data={'': ['README.md']},
+    scripts = ['bin/hatch'],
     install_requires=[
         'boto==2.47.0',
         'boto3==1.4.4',
@@ -38,9 +37,4 @@ setup(
             'pydocstyle==1.1.1'
         ]
     },
-    entry_points={
-        'console_scripts': [
-            'hatch=hatch.cli:run',
-        ]
-    }
 )

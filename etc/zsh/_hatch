@@ -9,6 +9,7 @@ function _hatch {
         "-h[show help]" \
         "--help[show help]" \
         "--version[Show version]" \
+        "-v[Show version]" \
         "--silent[Don't output to stdout]" \
         "--verbose[Output a lot to stdout]" \
         "--config-file=[Path to configuration file]:file:_files" \
