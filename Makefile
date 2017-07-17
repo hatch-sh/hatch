@@ -24,6 +24,7 @@ install:
 clean:
 	rm -rf .build build dist hatch.egg-info
 	python setup.py clean
+	find ./hatch -name '*.pyc' | xargs -L1 rm
 
 distclean: clean;
 	rm -rf .venv
