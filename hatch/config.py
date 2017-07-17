@@ -5,6 +5,7 @@ import botocore.session
 import boto3
 import uuid
 import sys
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -49,12 +50,13 @@ class WebsiteConfig(object):
         )
 
     @staticmethod
-    def parse(path):
+    def parse(basepath, path):
         try:
             with open(path, 'r') as stream:
                 cfg = yaml.load(stream)
+                path = os.path.join(basepath, cfg.get('path')) if 'path' in cfg else None
                 return WebsiteConfig(
-                    path=cfg.get('path'),
+                    path=path,
                     name=cfg.get('name'),
                     region=get_region(cfg),
                     domain=cfg.get('domain'),

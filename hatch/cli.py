@@ -73,11 +73,13 @@ def website_command(arguments):
     path = arguments.get('--path')
     region = arguments.get('--region')
 
+    basepath = os.path.curdir if config_path is None else os.path.dirname(config_path)
+
     file_config = None
     if config_path is None and os.path.isfile('website.yml'):
-        file_config = WebsiteConfig.parse('website.yml')
+        file_config = WebsiteConfig.parse(basepath, 'website.yml')
     elif config_path is not None:
-        file_config = WebsiteConfig.parse(config_path)
+        file_config = WebsiteConfig.parse(basepath, config_path)
 
     arguments_config = WebsiteConfig(path, name, region, domain)
     config = arguments_config.merge(file_config).merge(WebsiteConfig.defaults())
