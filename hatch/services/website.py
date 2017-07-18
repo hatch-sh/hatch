@@ -66,6 +66,7 @@ class Website(object):
             file_path = artifact.replace('{}/'.format(self.config.path), '')
             bucket.upload_file(artifact, file_path, ExtraArgs={
                 'ACL': 'public-read',
+                'CacheControl': 'public, max-age=31536000, no-cache',
                 'ContentType': content_type
             })
 
