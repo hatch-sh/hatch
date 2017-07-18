@@ -1,106 +1,48 @@
 #compdef hatch
 
-_message_next_arg()
-{
-    argcount=0
-    for word in "${words[@][2,-1]}"
-    do
-        if [[ $word != -* ]] ; then
-            ((argcount++))
-        fi
-    done
-    if [[ $argcount -le ${#myargs[@]} ]] ; then
-        _message -r $myargs[$argcount]
-        if [[ $myargs[$argcount] =~ ".*file.*" || $myargs[$argcount] =~ ".*path.*" ]] ; then
-            _files
-        fi
-    fi
-}
+function _hatch {
 
-_hatch ()
-{
-    local context state state_descr line
+    local curcontext="$curcontext" state line
     typeset -A opt_args
 
     _arguments -C \
-        ':command:->command' \
-        '*::options:->options'
+        "-h[show help]" \
+        "--help[show help]" \
+        "--version[Show version]" \
+        "--silent[Don't output to stdout]" \
+        "--verbose[Output a lot to stdout]" \
+        "--config-file=[Path to configuration file]:file:_files" \
+        "1: :(website api)" \
+        "*::arg:->args"
 
-    case $state in
-        (command)
-            local -a subcommands
-            subcommands=(
-				'website'
-            )
-            _values 'hatch' $subcommands
-        ;;
-
-        (options)
-            case $line[1] in
-                website)
-                    _hatch-website
-                ;;
-            esac
-        ;;
+    case $line[1] in
+        website)
+            _hatch_website_command
+            ;;
+        api)
+            ;;
     esac
-
 }
 
-_hatch-website ()
-{
-    local context state state_descr line
+function _hatch_website_command {
+
+    local curcontext="$curcontext" state line
     typeset -A opt_args
 
     _arguments -C \
-        ':command:->command' \
-        '*::options:->options'
+        "1: :(serve deploy)" \
+        "*::arg:->args"
 
-    case $state in
-        (command)
-            local -a subcommands
-            subcommands=(
-				'start'
-				'deploy'
-            )
-            _values 'hatch website' $subcommands
-        ;;
-
-        (options)
-            case $line[1] in
-                start)
-                    _hatch-website-start
-                ;;
-                deploy)
-                    _hatch-website-deploy
-                ;;
-            esac
-        ;;
+    case $line[1] in
+        deploy)
+            _arguments \
+                "--path=[Path to the website to deploy]:filename:_files" \
+                "--domain=[Custom domain name]" \
+                "--name=[Custom bucket name]"
+            ;;
+        api)
+            ;;
     esac
-
 }
 
-_hatch-website-start ()
-{
-    local context state state_descr line
-    typeset -A opt_args
-
-    _arguments -C \
-        ':command:->command' \
-
-}
-
-_hatch-website-deploy ()
-{
-    local context state state_descr line
-    typeset -A opt_args
-
-    _arguments -C \
-        ':command:->command' \
-		'(--path=-)--path=-' \
-		'(--domain=-)--domain=-' \
-		'(--name=-)--name=-' \
-
-}
-
-
-_hatch "$@"
+_hatch '$@'
