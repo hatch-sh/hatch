@@ -12,7 +12,7 @@ from the comforts of your command line.
 Usage:
   hatch [options]
   hatch [options] website start
-  hatch [options] website deploy [--path=<path>] [--domain=<domain>] [--name=<name>]
+  hatch [options] website deploy [--path=<path>] [--domain=<domain>] [--name=<name>] [--config-file=<file>]
 
 Options:
   -h --help            Show this help.
