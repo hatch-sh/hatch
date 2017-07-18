@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding=UTF-8
 # pylint: disable=locally-disabled, C0103
 
@@ -15,7 +16,7 @@ Usage:
 
 Options:
   -h --help            Show this help.
-  --version            Show version.
+  -v --version         Show version.
   --silent             Don't output to stdout.
   --verbose            Output a lot to stdout.
   --config-file <path> Path to configuration file [default: website.yml]

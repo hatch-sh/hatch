@@ -28,11 +28,12 @@ instructions
 
     git clone git@github.com:hatch-sh/hatch.git && cd hatch
     make setup
+    source .venv/bin/activate
 
 Now you can invoke hatch like this
 
-    .venv/bin/hatch website deploy examples/website
-    .venv/bin/hatch website start examples/website
+    ./bin/hatch website deploy examples/website
+    ./bin/hatch website start examples/website
 
 ## Creating a new release
 
