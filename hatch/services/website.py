@@ -49,6 +49,7 @@ class Website(object):
 
     def _upload_artifacts(self, bucket):
         mimetypes.add_type('application/json', '.map')
+        mimetypes.add_type('application/woff2', '.woff2')
         for artifact in recursive_glob(self.config.path, '*'):
             mime_type = mimetypes.guess_type(artifact)
 
