@@ -35,7 +35,7 @@ class Website(object):
             client = boto3.client('route53')
             zones = client.list_hosted_zones()['HostedZones']
             for z in zones:
-                if z['Name'] == domain + '.':
+                if z['Name'] == domain.main_domain + '.':
                     return z['Id']
 
             logger.warning('Error: "%s" not found in Route53', domain)
@@ -44,7 +44,7 @@ class Website(object):
 
     def _get_bucket_name(self, zone_id):
         if zone_id:
-            return self.config.domain
+            return self.config.domain.full_domain
         return self.config.name or self._random_name
 
     def _upload_artifacts(self, bucket):
@@ -75,7 +75,7 @@ class Website(object):
         try:
             zone_id = self._get_hosted_zone_id()
             bucket_name = self._get_bucket_name(zone_id)
-            custom_domain = self.config.domain if zone_id else None
+            custom_domain = self.config.domain.full_domain if zone_id else None
 
             s3 = boto3.resource('s3', self.config.region)
             bucket = s3.Bucket(bucket_name)

@@ -7,6 +7,8 @@ import uuid
 import sys
 import os
 
+from hatch.domain import Domain
+
 logger = logging.getLogger(__name__)
 
 
@@ -59,7 +61,7 @@ class WebsiteConfig(object):
                     path=path,
                     name=cfg.get('name'),
                     region=get_region(cfg),
-                    domain=cfg.get('domain'),
+                    domain=Domain.parse(cfg.get('domain')),
                     cdn=cfg.get('cdn')
                 )
         except IOError:
