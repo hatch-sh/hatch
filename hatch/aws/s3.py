@@ -1,6 +1,11 @@
+import logging
+
 from boto import connect_s3
 from boto.s3.connection import OrdinaryCallingFormat
 from botocore.client import ClientError
+
+
+logger = logging.getLogger(__name__)
 
 
 def bucket_exists(bucket):
@@ -25,6 +30,7 @@ def ensure_website_bucket_exists(bucket, region=None):
     bucket_website = bucket.Website()
 
     if not bucket_exists(bucket):
+        logger.info('Creating bucket {}'.format(bucket.name))
         kwargs = {'ACL': 'public-read'}
         if region and region != 'us-east-1':
             # See https://github.com/boto/boto3/issues/125

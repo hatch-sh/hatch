@@ -25,6 +25,7 @@ setup(
         'botocore==1.5.55',
         'PyYAML==3.12',
         'docopt==0.6.2',
+        'tldextract==2.1.0',
         'tornado==4.5.1'
     ],
     extras_require={

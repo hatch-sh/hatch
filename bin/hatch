@@ -34,7 +34,8 @@ from hatch.ux.website import serve_path
 from hatch.version import VERSION
 from hatch.config import WebsiteConfig
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger('hatch')
 
 VERBOSE_LOG_FORMAT = '%(asctime)s %(name)-45s %(levelname)-8s %(message)s'
 

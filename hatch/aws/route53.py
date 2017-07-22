@@ -41,7 +41,8 @@ def ensure_route53_s3_setup(zone_id, bucket_name, website_endpoint):
         if record['Type'] == 'A' and record['Name'] == record_name:
             return
 
-    logger.debug('Creating Route53 record set')
+    logger.info('Creating Route53 record set')
+    logger.info('It might take a few minutes before the DNS record has propagated')
     client.change_resource_record_sets(
         HostedZoneId=zone_id,
         ChangeBatch={

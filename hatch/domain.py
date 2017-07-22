@@ -1,3 +1,5 @@
+import tldextract
+
 class Domain(object):
 
     def __init__(self, subdomain, main_domain):
@@ -11,16 +13,14 @@ class Domain(object):
         return self.main_domain
 
     @staticmethod
-    def parse(domainStr):
+    def parse(domain_str):
 
-        if domainStr is None:
+        if domain_str is None:
             return None
 
-        parts = domainStr.split(".")
-        main_parts = parts[-2:]
-        sub_parts = parts[0:-2]
+        parsed = tldextract.extract(domain_str)
 
         return Domain(
-            ".".join(sub_parts) if len(sub_parts) is not 0 else None,
-            ".".join(main_parts)
+            parsed.subdomain,
+            "{}.{}".format(parsed.domain, parsed.suffix)
         )
