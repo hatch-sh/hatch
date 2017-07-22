@@ -31,7 +31,7 @@ function _hatch_website_command {
     typeset -A opt_args
 
     _arguments -C \
-        "1: :(serve deploy)" \
+        "1: :(start deploy)" \
         "*::arg:->args"
 
     case $line[1] in
@@ -41,7 +41,9 @@ function _hatch_website_command {
                 "--domain=[Custom domain name]" \
                 "--name=[Custom bucket name]"
             ;;
-        api)
+        start)
+            _arguments \
+                "--path=[Path to the website to serve]:filename:_files" \
             ;;
     esac
 }

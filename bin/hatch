@@ -11,8 +11,8 @@ from the comforts of your command line.
 
 Usage:
   hatch [options]
-  hatch [options] website start
-  hatch [options] website deploy [--path=<path>] [--domain=<domain>] [--name=<name>] [--config-file=<file>]
+  hatch [options] website start [--path=<path>]
+  hatch [options] website deploy [--path=<path>] [--domain=<domain>] [--name=<name>]
 
 Options:
   -h --help            Show this help.
@@ -95,7 +95,7 @@ def website_command(arguments):
     if arguments.get('deploy'):
         website.deploy()
     elif arguments.get('start'):
-        serve_path(path, 8000)
+        serve_path(config.path, 8000)
 
 
 def api_command(arguments):

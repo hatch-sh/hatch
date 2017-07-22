@@ -1,3 +1,5 @@
+import os
+
 import logging
 import tornado.ioloop
 import tornado.web
@@ -7,7 +9,10 @@ logger = logging.getLogger(__name__)
 
 def serve_path(path, port):
     app = tornado.web.Application([
-        (r'/(.*)', tornado.web.StaticFileHandler, {'path': path}),
+        (r'/(.*)', tornado.web.StaticFileHandler, {
+            'default_filename': 'index.html',
+            'path': os.path.realpath(path)
+        }),
     ])
     app.listen(port)
     logger.info('Hatch is serving files on http://localhost:{}'.format(port))

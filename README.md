@@ -32,8 +32,8 @@ instructions
 
 Now you can invoke hatch like this
 
-    ./bin/hatch website deploy --config-file examples/website/website.yml
-    ./bin/hatch website start --config-file examples/website/website.yml
+    ./bin/hatch --config-file examples/website/website.yml website deploy --path examples/website
+    ./bin/hatch --config-file examples/website/website.yml website start --path examples/website
 
 ## Creating a new release
 
