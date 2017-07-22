@@ -1,5 +1,6 @@
 import tldextract
 
+
 class Domain(object):
 
     def __init__(self, subdomain, main_domain):
