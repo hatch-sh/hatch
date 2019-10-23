@@ -23,7 +23,7 @@ setup(
         'boto==2.47.0',
         'boto3==1.4.4',
         'botocore==1.5.55',
-        'PyYAML==3.12',
+        'PyYAML==5.1',
         'docopt==0.6.2',
         'tornado==4.5.1'
     ],
